@@ -79,7 +79,7 @@ class _RivrCreateAccountScreenState extends State<RivrCreateAccountScreen> {
                       const Text('Password', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14)),
                       const SizedBox(height: 8),
                       Container(
-                        decoration: BoxDecoration(color: Color(0xFF23242A), borderRadius: BorderRadius.circular(8)),
+                        decoration: BoxDecoration(color: Color(0xFF1F2937), borderRadius: BorderRadius.circular(8)),
                         child: Row(
                           children: [
                             Expanded(
@@ -159,7 +159,7 @@ class _RivrTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(color: const Color(0xFF23242A), borderRadius: BorderRadius.circular(8)),
+      decoration: BoxDecoration(color: const Color(0xFF1F2937), borderRadius: BorderRadius.circular(8)),
       child: TextField(
         style: const TextStyle(color: Colors.white),
         decoration: InputDecoration(

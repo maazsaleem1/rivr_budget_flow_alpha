@@ -48,7 +48,7 @@ class _RivrLoginScreenState extends State<RivrLoginScreen> {
                       const InterText('Email', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14)),
                       const SizedBox(height: 8),
                       Container(
-                        decoration: BoxDecoration(color: Color(0xFF23242A), borderRadius: BorderRadius.circular(8)),
+                        decoration: BoxDecoration(color: Color(0xFF1F2937), borderRadius: BorderRadius.circular(8)),
                         child: const TextField(
                           style: TextStyle(color: Colors.white),
                           decoration: InputDecoration(
@@ -64,7 +64,7 @@ class _RivrLoginScreenState extends State<RivrLoginScreen> {
                       const Text('Password', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14)),
                       const SizedBox(height: 8),
                       Container(
-                        decoration: BoxDecoration(color: Color(0xFF23242A), borderRadius: BorderRadius.circular(8)),
+                        decoration: BoxDecoration(color: Color(0xFF1F2937), borderRadius: BorderRadius.circular(8)),
                         child: Row(
                           children: [
                             Expanded(

@@ -37,7 +37,7 @@ class RivrSubscriptionScreen extends StatelessWidget {
                           decoration: BoxDecoration(
                             border: Border.all(color: const Color(0xFF00D1E9)),
                             borderRadius: BorderRadius.circular(8),
-                            color: const Color(0xFF23242A),
+                            color: const Color(0xFF1F2937),
                           ),
                           child: Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
@@ -52,7 +52,7 @@ class RivrSubscriptionScreen extends StatelessWidget {
                                         crossAxisAlignment: CrossAxisAlignment.center,
                                         children: [
                                           const InterText(
-                                            'Starter',
+                                            'Pro',
                                             style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
                                           ),
                                           SizedBox(width: 8),
@@ -79,7 +79,7 @@ class RivrSubscriptionScreen extends StatelessWidget {
                               borderRadius: BorderRadius.circular(8),
                               boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.08), blurRadius: 4, offset: const Offset(0, 2))],
                             ),
-                            child: const InterText('Best Plan', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12)),
+                            child: const InterText('Most Popular', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12)),
                           ),
                         ),
                       ],
@@ -91,7 +91,7 @@ class RivrSubscriptionScreen extends StatelessWidget {
                     const SizedBox(height: 14),
                     // Card Number Field
                     Container(
-                      decoration: BoxDecoration(color: const Color(0xFF23242A), borderRadius: BorderRadius.circular(8)),
+                      decoration: BoxDecoration(color: const Color(0xFF1F2937), borderRadius: BorderRadius.circular(8)),
                       child: Row(
                         children: [
                           Padding(
@@ -113,9 +113,63 @@ class RivrSubscriptionScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 12),
+                    // Expiry date and CVV Headings
+                    Row(
+                      children: const [
+                        Expanded(
+                          child: InterText('Expiry date', style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w500)),
+                        ),
+                        SizedBox(width: 12),
+                        Expanded(
+                          child: InterText('Cvv', style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w500)),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 6),
+                    // Expiry Date and CVV Fields
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Container(
+                            decoration: BoxDecoration(color: const Color(0xFF1F2937), borderRadius: BorderRadius.circular(8)),
+                            child: const Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 12.0),
+                              child: TextField(
+                                style: TextStyle(color: Colors.white),
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  hintText: 'MM/YY',
+                                  hintStyle: TextStyle(color: Colors.white38),
+                                ),
+                                keyboardType: TextInputType.datetime,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Container(
+                            decoration: BoxDecoration(color: const Color(0xFF1F2937), borderRadius: BorderRadius.circular(8)),
+                            child: const Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 12.0),
+                              child: TextField(
+                                style: TextStyle(color: Colors.white),
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  hintText: '3 Digits',
+                                  hintStyle: TextStyle(color: Colors.white38),
+                                ),
+                                keyboardType: TextInputType.number,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
                     // Secure Info
                     Container(
-                      decoration: BoxDecoration(color: const Color(0xFF23242A), borderRadius: BorderRadius.circular(8)),
+                      decoration: BoxDecoration(color: const Color(0xFF1F2937), borderRadius: BorderRadius.circular(8)),
                       child: Row(
                         children: [
                           Padding(
@@ -217,7 +271,7 @@ class _PlanSelectionBottomSheetState extends State<PlanSelectionBottomSheet> {
       padding: MediaQuery.of(context).viewInsets,
       child: Container(
         decoration: BoxDecoration(
-          color: const Color(0xFF23242A),
+          color: const Color(0xFF1F2937),
           borderRadius: const BorderRadius.only(topLeft: Radius.circular(28), topRight: Radius.circular(28)),
         ),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
@@ -319,7 +373,7 @@ class PaymentSuccessDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      backgroundColor: const Color(0xFF23242A),
+      backgroundColor: const Color(0xFF1F2937),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
