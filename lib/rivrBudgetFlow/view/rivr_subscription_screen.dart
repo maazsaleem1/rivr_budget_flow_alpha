@@ -8,9 +8,9 @@ class RivrSubscriptionScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF1F2937),
+      backgroundColor: const Color(0xFF121A28),
       appBar: AppBar(
-        backgroundColor: const Color(0xFF1F2937),
+        backgroundColor: const Color(0xFF121A28),
         elevation: 0,
         leading: IconButton(icon: SvgPicture.asset('assets/images/rivrArrowBack.svg'), onPressed: () => Navigator.of(context).pop()),
         title: const Text('Add your Plan', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600)),

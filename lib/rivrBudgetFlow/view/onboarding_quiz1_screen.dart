@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'onboarding_quiz1_reason_screen.dart';
+import 'package:percent_indicator/percent_indicator.dart';
+import '../../widgets/inter_text.dart';
 
 class OnboardingQuiz1Screen extends StatelessWidget {
   const OnboardingQuiz1Screen({super.key});
@@ -7,7 +9,7 @@ class OnboardingQuiz1Screen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF1F2937),
+      backgroundColor: const Color(0xFF121A28),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -16,20 +18,21 @@ class OnboardingQuiz1Screen extends StatelessWidget {
             children: [
               const SizedBox(height: 24),
               // Progress bar
-              LinearProgressIndicator(
-                value: 0.25,
-                backgroundColor: Color(0xFF303A48),
-                valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF06B6D4)),
-                minHeight: 8,
+              LinearPercentIndicator(
+                percent: 0.25,
+                lineHeight: 8,
+                barRadius: const Radius.circular(10),
+                backgroundColor: const Color(0xFF303A48),
+                linearGradient: const LinearGradient(colors: [Color(0xFF3B82F6), Color(0xFF06B6D4)]),
               ),
               const SizedBox(height: 24),
               // Step indicator
               const Center(child: Text('Step 1 of 4', style: TextStyle(color: Colors.white70, fontWeight: FontWeight.w600, fontSize: 16))),
               const SizedBox(height: 32),
               // Title
-              const Text(
+              const InterText(
                 'Your Rivr Budget Is Permission to Succeed',
-                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 22),
+                style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 16),
               ),
               const SizedBox(height: 16),
               // Subtitle

@@ -16,7 +16,7 @@ class _RivrCreateAccountScreenState extends State<RivrCreateAccountScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF1F2937),
+      backgroundColor: const Color(0xFF121A28),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24),
