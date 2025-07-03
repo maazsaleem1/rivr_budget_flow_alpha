@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:percent_indicator/percent_indicator.dart';
+import 'package:rivr_project/rivrBudgetFlow/view/dashboard/home_screen.dart';
 
 import '../../widgets/inter_text.dart';
 
@@ -107,7 +109,9 @@ class OnboardingQuiz5Screen extends StatelessWidget {
                         foregroundColor: Colors.white,
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        Get.to(()=>HomeScreen());
+                      },
                       child: const InterText('Go to Dashboard', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
                     ),
                   ),

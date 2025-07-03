@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:rivr_project/rivrBudgetFlow/view/dashboard/home_screen.dart';
+import 'package:rivr_project/rivrBudgetFlow/view/rivr_login_screen.dart';
 import 'dart:async';
 import 'package:rivr_project/rivrBudgetFlow/view/rivr_pre_login.dart';
 
@@ -25,7 +26,7 @@ class _RivrSplashScreenState extends State<RivrSplashScreen> with SingleTickerPr
     ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutBack));
     _controller.forward();
     Future.delayed(const Duration(seconds: 4), () {
-      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const HomeScreen()));
+      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const RivrLoginScreen()));
     });
   }
 
