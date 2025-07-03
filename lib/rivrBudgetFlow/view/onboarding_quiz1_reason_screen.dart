@@ -75,7 +75,7 @@ class _OnboardingQuiz1ReasonScreenState extends State<OnboardingQuiz1ReasonScree
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 24),
+              const SizedBox(height: 50),
               LinearPercentIndicator(
                 percent: 0.25,
                 lineHeight: 8,
@@ -83,7 +83,7 @@ class _OnboardingQuiz1ReasonScreenState extends State<OnboardingQuiz1ReasonScree
                 backgroundColor: const Color(0xFF303A48),
                 linearGradient: const LinearGradient(colors: [Color(0xFF3B82F6), Color(0xFF06B6D4)]),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 12),
               const Center(child: InterText('Step 1 of 4', style: TextStyle(color: Colors.white70, fontWeight: FontWeight.w600, fontSize: 16))),
               const SizedBox(height: 24),
               const InterText(

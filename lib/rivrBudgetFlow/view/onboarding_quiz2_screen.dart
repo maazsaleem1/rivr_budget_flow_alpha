@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import '../../widgets/inter_text.dart';
 import 'package:percent_indicator/percent_indicator.dart';
+import 'onboarding_quiz3_screen.dart';
 
 class OnboardingQuiz2Screen extends StatefulWidget {
-  const OnboardingQuiz2Screen({Key? key}) : super(key: key);
+  const OnboardingQuiz2Screen({super.key});
 
   @override
   State<OnboardingQuiz2Screen> createState() => _OnboardingQuiz2ScreenState();
@@ -24,18 +25,13 @@ class _OnboardingQuiz2ScreenState extends State<OnboardingQuiz2Screen> {
     final width = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: const Color(0xFF121A28),
-      appBar: AppBar(
-        backgroundColor: const Color(0xFF121A28),
-        elevation: 0,
-        title: const InterText('Step 2 of 4', style: TextStyle(color: Colors.white70, fontWeight: FontWeight.w600, fontSize: 16)),
-        centerTitle: true,
-      ),
+
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 24),
+            const SizedBox(height: 50),
             LinearPercentIndicator(
               percent: 0.5,
               lineHeight: 8,
@@ -43,7 +39,7 @@ class _OnboardingQuiz2ScreenState extends State<OnboardingQuiz2Screen> {
               backgroundColor: const Color(0xFF303A48),
               linearGradient: const LinearGradient(colors: [Color(0xFF3B82F6), Color(0xFF06B6D4)]),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 12),
             const Center(child: InterText('Step 2 of 4', style: TextStyle(color: Colors.white70, fontWeight: FontWeight.w600, fontSize: 16))),
             const SizedBox(height: 16),
             const InterText('Set Your Savings Goals', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18)),
@@ -80,7 +76,9 @@ class _OnboardingQuiz2ScreenState extends State<OnboardingQuiz2Screen> {
                 ),
                 child: TextButton(
                   style: TextButton.styleFrom(foregroundColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => const OnboardingQuiz3Screen()));
+                  },
                   child: const InterText('Continue To Goals', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
                 ),
               ),
@@ -93,6 +91,7 @@ class _OnboardingQuiz2ScreenState extends State<OnboardingQuiz2Screen> {
   }
 
   Widget _buildGoalCard(Map<String, dynamic> goal, double width) {
+    final isExpanded = goal['selected'] as bool;
     return Container(
       width: width - 32,
       margin: const EdgeInsets.only(bottom: 16),
@@ -109,23 +108,33 @@ class _OnboardingQuiz2ScreenState extends State<OnboardingQuiz2Screen> {
               Expanded(
                 child: Align(
                   alignment: Alignment.topRight,
-                  child: Container(
-                    height: 24,
-                    decoration: BoxDecoration(
-                      gradient: const LinearGradient(colors: [Color(0xFF3B82F6), Color(0xFF06B6D4)]),
-                      borderRadius: BorderRadius.circular(100),
-                    ),
-                    padding: const EdgeInsets.symmetric(horizontal: 5),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset('assets/images/setbudgeticon.png', fit: BoxFit.scaleDown),
-                        const SizedBox(width: 6),
-                        InterText('SET BUDGET', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 12)),
-                      ],
-                    ),
-                  ),
+                  child:
+                      isExpanded
+                          ? GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                goal['selected'] = false;
+                              });
+                            },
+                            child: Image.asset('assets/images/minussignimage.png', width: 32, height: 32),
+                          )
+                          : Container(
+                            height: 24,
+                            padding: const EdgeInsets.symmetric(horizontal: 5),
+                            decoration: BoxDecoration(
+                              gradient: const LinearGradient(colors: [Color(0xFF3B82F6), Color(0xFF06B6D4)]),
+                              borderRadius: BorderRadius.circular(100),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Image.asset('assets/images/setbudgeticon.png', fit: BoxFit.scaleDown),
+                                const SizedBox(width: 6),
+                                InterText('SET BUDGET', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 12)),
+                              ],
+                            ),
+                          ),
                 ),
               ),
             ],
@@ -137,12 +146,50 @@ class _OnboardingQuiz2ScreenState extends State<OnboardingQuiz2Screen> {
           const SizedBox(height: 12),
           const Divider(color: Color(0xFF303A48), thickness: 1),
           const SizedBox(height: 8),
-          Center(
-            child: InterText(
-              'Click to select this goal',
-              style: const TextStyle(color: Color(0xFF9CA3AF), fontSize: 13, fontWeight: FontWeight.w400),
+          if (!isExpanded)
+            GestureDetector(
+              onTap: () {
+                setState(() {
+                  goal['selected'] = !goal['selected'];
+                });
+              },
+              child: Center(
+                child: InterText(
+                  'Click to select this goal',
+                  style: const TextStyle(color: Color(0xFF9CA3AF), fontSize: 13, fontWeight: FontWeight.w400),
+                ),
+              ),
             ),
-          ),
+          if (isExpanded) ...[
+            const SizedBox(height: 16),
+            InterText('Goal Amount', style: const TextStyle(color: Colors.white, fontSize: 14)),
+            const SizedBox(height: 6),
+            TextField(
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: Colors.black,
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide.none),
+                hintText: 'Enter amount',
+                hintStyle: const TextStyle(color: Color(0xFF9CA3AF)),
+                prefixIcon: Padding(padding: const EdgeInsets.all(12.0), child: Image.asset('assets/images/dollaricon.png', width: 20, height: 20)),
+              ),
+              style: const TextStyle(color: Colors.white),
+            ),
+            const SizedBox(height: 12),
+            InterText('Timeline (months)', style: const TextStyle(color: Colors.white, fontSize: 14)),
+            const SizedBox(height: 6),
+            TextField(
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: Colors.black,
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide.none),
+                hintText: 'Enter months',
+                hintStyle: const TextStyle(color: Color(0xFF9CA3AF)),
+                prefixIcon: Padding(padding: const EdgeInsets.all(12.0), child: Image.asset('assets/images/calendaricon.png', width: 20, height: 20)),
+              ),
+              style: const TextStyle(color: Colors.white),
+            ),
+          ],
         ],
       ),
     );
