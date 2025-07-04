@@ -47,21 +47,13 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Stack(
           children: [
             Positioned.fill(child: _getScreen(_selectedIndex)),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: _CustomNavbar(
-                selectedIndex: _selectedIndex,
-                onTap: _onNavTap,
-              ),
-            ),
+            Align(alignment: Alignment.bottomCenter, child: _CustomNavbar(selectedIndex: _selectedIndex, onTap: _onNavTap)),
           ],
         ),
       ),
     );
   }
 }
-
-
 
 // Extracted the original home content to a separate widget for clarity
 class _HomeContent extends StatelessWidget {
@@ -71,7 +63,6 @@ class _HomeContent extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 90),
       child: Column(
         children: [
-          
           // Welcome message
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -81,14 +72,12 @@ class _HomeContent extends StatelessWidget {
                 SizedBox(height: 16),
                 Align(
                   alignment: Alignment.topLeft,
-                  child: InterText(
-                    'Welcome back, Jane!', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20)),
+                  child: InterText('Welcome back, Jane!', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20)),
                 ),
                 SizedBox(height: 4),
                 InterText('We love your progress. Keep it up.', style: TextStyle(color: Colors.white70, fontSize: 14)),
                 SizedBox(height: 10),
-              InterText(
-                    'June Budget So Far', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
+                InterText('June Budget So Far', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
               ],
             ),
           ),
@@ -101,39 +90,31 @@ class _HomeContent extends StatelessWidget {
                 Expanded(
                   child: Container(
                     padding: const EdgeInsets.all(15),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF1F2937),
-                      borderRadius: BorderRadius.circular(16),
-                    ),
+                    decoration: BoxDecoration(color: const Color(0xFF1F2937), borderRadius: BorderRadius.circular(16)),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Row(
                           children: [
-                            SizedBox(
-                              height: 50,
-                              width: 50,
-                              child: Image.asset('assets/images/money_in.png'),
-                            ),
+                            SizedBox(height: 50, width: 50, child: Image.asset('assets/images/money_in.png')),
                             const SizedBox(width: 12),
-                            Expanded(child: 
+                            Expanded(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Column(
+                                    children: [
+                                      const InterText('Money In', style: TextStyle(color: Colors.white70, fontSize: 14)),
 
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Column(
-                                                      
-                                  children: [
-                                    const InterText('Money In', style: TextStyle(color: Colors.white70, fontSize: 14)),
-                                
-                                    const InterText('\$2,500', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 22)),
-                                  ],
-                                ),
-                              ],
-                            ) )
+                                      const InterText('\$3,500', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 22)),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
                           ],
                         ),
-                         ],
+                      ],
                     ),
                   ),
                 ),
@@ -141,39 +122,31 @@ class _HomeContent extends StatelessWidget {
                 Expanded(
                   child: Container(
                     padding: const EdgeInsets.all(15),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF1F2937),
-                      borderRadius: BorderRadius.circular(16),
-                    ),
+                    decoration: BoxDecoration(color: const Color(0xFF1F2937), borderRadius: BorderRadius.circular(16)),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Row(
                           children: [
-                            SizedBox(
-                              height: 50,
-                              width: 50,
-                              child: Image.asset('assets/images/money_out.png'),
-                            ),
+                            SizedBox(height: 50, width: 50, child: Image.asset('assets/images/money_out.png')),
                             const SizedBox(width: 12),
-                            Expanded(child: 
+                            Expanded(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Column(
+                                    children: [
+                                      const InterText('Money Out', style: TextStyle(color: Colors.white70, fontSize: 14)),
 
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Column(
-                                                      
-                                  children: [
-                                    const InterText('Money Out', style: TextStyle(color: Colors.white70, fontSize: 14)),
-                                
-                                    const InterText('\$85.42', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 22)),
-                                  ],
-                                ),
-                              ],
-                            ) )
+                                      const InterText('\$85.42', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 22)),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
                           ],
                         ),
-                         ],
+                      ],
                     ),
                   ),
                 ),
@@ -188,10 +161,7 @@ class _HomeContent extends StatelessWidget {
               width: double.infinity,
               padding: const EdgeInsets.only(top: 30, bottom: 60, left: 20, right: 20),
               decoration: BoxDecoration(
-                image: const DecorationImage(
-                  image: AssetImage('assets/images/upcoming_bills.png'),
-                  fit: BoxFit.cover,
-                ),
+                image: const DecorationImage(image: AssetImage('assets/images/upcoming_bills.png'), fit: BoxFit.cover),
                 borderRadius: BorderRadius.circular(16),
               ),
               child: Column(
@@ -223,24 +193,19 @@ class _HomeContent extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 10,),
+              padding: const EdgeInsets.symmetric(vertical: 10),
               width: double.infinity,
-              decoration: BoxDecoration(
-                color: const Color(0xFF1F2937),
-                borderRadius: BorderRadius.circular(12),
-              ),
+              decoration: BoxDecoration(color: const Color(0xFF1F2937), borderRadius: BorderRadius.circular(12)),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  SizedBox(height: 40, width: 40, child: Image.asset('assets/images/connect_account_icon.png')),
                   SizedBox(
-                    height: 40,
-                    width:40,
-                    child: Image.asset('assets/images/connect_account_icon.png')),
-                SizedBox(
                     // height: 120,
                     width: 220,
-                    child: Image.asset('assets/images/connect_account_text.png')),
-                  ],
+                    child: Image.asset('assets/images/connect_account_text.png'),
+                  ),
+                ],
               ),
             ),
           ),
@@ -250,10 +215,7 @@ class _HomeContent extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Container(
               width: double.infinity,
-              decoration: BoxDecoration(
-                color: const Color(0xFF1F2937),
-                borderRadius: BorderRadius.circular(12),
-              ),
+              decoration: BoxDecoration(color: const Color(0xFF1F2937), borderRadius: BorderRadius.circular(12)),
               padding: const EdgeInsets.all(20),
               child: Column(
                 children: [
@@ -266,41 +228,20 @@ class _HomeContent extends StatelessWidget {
                     child: Stack(
                       alignment: Alignment.center,
                       children: [
-                        CustomPaint(
-                          size: const Size(160, 160),
-                          painter: _SpendingChartPainter(),
-                        ),
+                        CustomPaint(size: const Size(160, 160), painter: _SpendingChartPainter()),
                         Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: const [
-                            Text(
-                              'Surplus',
-                              style: TextStyle(
-                                color: Color(0xFF4ADE80),
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                              ),
-                            ),
+                            Text('Surplus', style: TextStyle(color: Color(0xFF4ADE80), fontWeight: FontWeight.bold, fontSize: 16)),
                             SizedBox(height: 4),
-                            Text(
-                              '￠2,414.58',
-                              style: TextStyle(
-                                color: Color(0xFF4ADE80),
-                                fontWeight: FontWeight.bold,
-                                fontSize: 22,
-                              ),
-                            ),
+                            Text('￠2,414.58', style: TextStyle(color: Color(0xFF4ADE80), fontWeight: FontWeight.bold, fontSize: 22)),
                           ],
                         ),
                       ],
                     ),
                   ),
                   const SizedBox(height: 16),
-                  Divider(
-                    color: Color(0xFF9CA3AF),
-                    thickness: 1,
-                    height: 24,
-                  ),
+                  Divider(color: Color(0xFF9CA3AF), thickness: 1, height: 24),
                   const SizedBox(height: 16),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -341,11 +282,7 @@ class _CustomNavbar extends StatelessWidget {
   final int selectedIndex;
   final Function(int) onTap;
 
-  const _CustomNavbar({
-    Key? key,
-    required this.selectedIndex,
-    required this.onTap,
-  }) : super(key: key);
+  const _CustomNavbar({Key? key, required this.selectedIndex, required this.onTap}) : super(key: key);
 
   static const LinearGradient _mainGradient = LinearGradient(
     colors: [Color(0xFF008FED), Color(0xFF00D1E9)],
@@ -366,10 +303,7 @@ class _CustomNavbar extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               decoration: const BoxDecoration(
                 color: Color(0xFF23242A),
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(20),
-                  topRight: Radius.circular(20),
-                ),
+                borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -421,21 +355,9 @@ class _CustomNavbar extends StatelessWidget {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   gradient: _mainGradient,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.15),
-                      blurRadius: 8,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
+                  boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.15), blurRadius: 8, offset: const Offset(0, 4))],
                 ),
-                child: Center(
-                  child: IconButton(
-                    icon: const Icon(Icons.add, color: Colors.white, size: 36),
-                    onPressed: () {},
-                    splashRadius: 36,
-                  ),
-                ),
+                child: Center(child: IconButton(icon: const Icon(Icons.add, color: Colors.white, size: 36), onPressed: () {}, splashRadius: 36)),
               ),
             ),
           ),
@@ -469,21 +391,9 @@ class _NavbarItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget iconWidget = Image.asset(
-      isActive && selectedIcon != null ? selectedIcon! : icon,
-      height: 44,
-    );
+    Widget iconWidget = Image.asset(isActive && selectedIcon != null ? selectedIcon! : icon, height: 44);
 
-    return GestureDetector(
-      onTap: onTap,
-      behavior: HitTestBehavior.opaque,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          iconWidget,
-        ],
-      ),
-    );
+    return GestureDetector(onTap: onTap, behavior: HitTestBehavior.opaque, child: Column(mainAxisSize: MainAxisSize.min, children: [iconWidget]));
   }
 }
 
@@ -497,26 +407,29 @@ class _SpendingChartPainter extends CustomPainter {
     final double leftSweep = 2 * pi * 0.85; // 85%
 
     // Draw background circle (optional, for subtle shadow)
-    final Paint bgPaint = Paint()
-      ..color = const Color(0xFF23242A)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = strokeWidth;
+    final Paint bgPaint =
+        Paint()
+          ..color = const Color(0xFF23242A)
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = strokeWidth;
     canvas.drawArc(rect.deflate(strokeWidth / 2), 0, 2 * pi, false, bgPaint);
 
     // Draw green arc (budget left)
-    final Paint leftPaint = Paint()
-      ..color = const Color(0xFF4ADE80)
-      ..style = PaintingStyle.stroke
-      ..strokeCap = StrokeCap.round
-      ..strokeWidth = strokeWidth;
+    final Paint leftPaint =
+        Paint()
+          ..color = const Color(0xFF4ADE80)
+          ..style = PaintingStyle.stroke
+          ..strokeCap = StrokeCap.round
+          ..strokeWidth = strokeWidth;
     canvas.drawArc(rect.deflate(strokeWidth / 2), startAngle + spentSweep, leftSweep, false, leftPaint);
 
     // Draw orange arc (money spent)
-    final Paint spentPaint = Paint()
-      ..color = const Color(0xFFFB923C)
-      ..style = PaintingStyle.stroke
-      ..strokeCap = StrokeCap.round
-      ..strokeWidth = strokeWidth;
+    final Paint spentPaint =
+        Paint()
+          ..color = const Color(0xFFFB923C)
+          ..style = PaintingStyle.stroke
+          ..strokeCap = StrokeCap.round
+          ..strokeWidth = strokeWidth;
     canvas.drawArc(rect.deflate(strokeWidth / 2), startAngle, spentSweep, false, spentPaint);
   }
 
