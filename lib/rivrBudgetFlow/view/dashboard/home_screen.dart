@@ -82,7 +82,7 @@ class _HomeContent extends StatelessWidget {
                 Align(
                   alignment: Alignment.topLeft,
                   child: InterText(
-                    'Welcome back, Jane!', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20)),
+                    'Welcome back, Jane Jane', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20)),
                 ),
                 SizedBox(height: 4),
                 InterText('We love your progress. Keep it up.', style: TextStyle(color: Colors.white70, fontSize: 14)),
