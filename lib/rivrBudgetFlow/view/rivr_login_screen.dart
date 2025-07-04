@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:rivr_project/rivrBudgetFlow/view/forgot_pass_screen.dart';
 import 'rivr_create_account_screen.dart';
 import 'rivr_subscription_screen.dart';
 import '../../widgets/inter_text.dart';
@@ -93,7 +94,9 @@ class _RivrLoginScreenState extends State<RivrLoginScreen> {
                       const SizedBox(height: 8),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
-                        children: [GestureDetector(onTap: () {}, child: Image.asset('assets/images/textGradientForgotPass.png', height: 22))],
+                        children: [GestureDetector(onTap: () {
+                          Get.to(() => const ForgotPassScreen());
+                        }, child: Image.asset('assets/images/textGradientForgotPass.png', height: 22))],
                       ),
                       const SizedBox(height: 28),
                       SizedBox(

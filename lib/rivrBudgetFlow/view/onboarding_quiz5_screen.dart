@@ -56,9 +56,9 @@ class OnboardingQuiz5Screen extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               _socialIconButton('assets/images/twitter.png'),
-                              const SizedBox(width: 10),
+                              const SizedBox(width: 5),
                               _socialIconButton('assets/images/facebook.png'),
-                              const SizedBox(width: 10),
+                              // const SizedBox(width: 10),
                             ],
                           ),
                           10.verticalSpace,
