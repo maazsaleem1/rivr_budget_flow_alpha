@@ -110,7 +110,7 @@ class OnboardingQuiz5Screen extends StatelessWidget {
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                       ),
                       onPressed: () {
-                        Get.to(()=>HomeScreen());
+                        Get.to(() => HomeScreen());
                       },
                       child: const InterText('Go to Dashboard', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
                     ),
