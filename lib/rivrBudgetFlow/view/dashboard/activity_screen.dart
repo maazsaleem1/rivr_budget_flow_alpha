@@ -14,7 +14,7 @@ class ActivityScreen extends StatelessWidget {
         title: const InterText('Activity', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
       ),
       body: const Center(
-        child: InterText('This is the Activity Screen (dummy data)', style: TextStyle(color: Colors.white, fontSize: 18)),
+        child: InterText('Work is in progress', style: TextStyle(color: Colors.white, fontSize: 18)),
       ),
     );
   }

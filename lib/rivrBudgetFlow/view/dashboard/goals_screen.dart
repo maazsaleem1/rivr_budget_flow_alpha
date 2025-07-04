@@ -14,7 +14,7 @@ class GoalsScreen extends StatelessWidget {
         title: const InterText('Goals', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
       ),
       body: const Center(
-        child: InterText('This is the Goals Screen (dummy data)', style: TextStyle(color: Colors.white, fontSize: 18)),
+        child: InterText('Work is in progress', style: TextStyle(color: Colors.white, fontSize: 18)),
       ),
     );
   }

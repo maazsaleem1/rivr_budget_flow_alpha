@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../../widgets/inter_text.dart';
 import '../../../widgets/custom_app_bar.dart';
@@ -40,6 +41,21 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final width = size.width;
+    final height = size.height;
+    final scale = width / 375.0; // base iPhone 11 width for scaling
+    final horizontalPadding = width * 0.05;
+    final cardImageSize = width * 0.13;
+    final cardPadding = width * 0.04;
+    final cardSpacing = width * 0.04;
+    final sectionSpacing = height * 0.03;
+    final alertCardHeight = height * 0.22;
+    final alertCardPadding = width * 0.05;
+    final connectIconSize = width * 0.10;
+    final connectTextWidth = width * 0.5;
+    final chartSize = width * 0.42;
+
     return Scaffold(
       backgroundColor: const Color(0xFF121A28),
       appBar: const CustomAppBar(),
@@ -55,95 +71,130 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
+
+
 // Extracted the original home content to a separate widget for clarity
 class _HomeContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final width = size.width;
+    final height = size.height;
+    final scale = width / 375.0; // base iPhone 11 width for scaling
+    final horizontalPadding = width * 0.05;
+    final cardImageSize = width * 0.13;
+    final cardPadding = width * 0.04;
+    final cardSpacing = width * 0.04;
+    final sectionSpacing = height * 0.03;
+    final alertCardHeight = height * 0.22;
+    final alertCardPadding = width * 0.05;
+    final connectIconSize = width * 0.10;
+    final connectTextWidth = width * 0.5;
+    final chartSize = width * 0.42;
+
     return SingleChildScrollView(
-      padding: const EdgeInsets.only(bottom: 90),
+      padding: EdgeInsets.only(bottom: height * 0.11),
       child: Column(
         children: [
           // Welcome message
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
+            padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
-                SizedBox(height: 16),
+              children: [
+                SizedBox(height: 16 * scale),
                 Align(
                   alignment: Alignment.topLeft,
-                  child: InterText('Welcome back, Jane!', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20)),
+                  child: InterText(
+                    'Welcome back, Jane!', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20)),
                 ),
                 SizedBox(height: 4),
                 InterText('We love your progress. Keep it up.', style: TextStyle(color: Colors.white70, fontSize: 14)),
                 SizedBox(height: 10),
-                InterText('June Budget So Far', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
+              InterText(
+                    'June Budget So Far', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
               ],
             ),
           ),
-          const SizedBox(height: 18),
+          SizedBox(height: sectionSpacing),
           // Budget summary cards
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
+            padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
             child: Row(
               children: [
                 Expanded(
                   child: Container(
                     padding: const EdgeInsets.all(15),
-                    decoration: BoxDecoration(color: const Color(0xFF1F2937), borderRadius: BorderRadius.circular(16)),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF1F2937),
+                      borderRadius: BorderRadius.circular(16),
+                    ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Row(
                           children: [
-                            SizedBox(height: 50, width: 50, child: Image.asset('assets/images/money_in.png')),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Column(
-                                    children: [
-                                      const InterText('Money In', style: TextStyle(color: Colors.white70, fontSize: 14)),
-
-                                      const InterText('\$3,500', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 22)),
-                                    ],
-                                  ),
-                                ],
-                              ),
+                            SizedBox(
+                              height: 50,
+                              width: 50,
+                              child: Image.asset('assets/images/money_in.png'),
                             ),
+                            const SizedBox(width: 12),
+                            Expanded(child: 
+
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Column(
+                                                      
+                                  children: [
+                                    const InterText('Money In', style: TextStyle(color: Colors.white70, fontSize: 14)),
+                                
+                                    const InterText('\$2,500', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 22)),
+                                  ],
+                                ),
+                              ],
+                            ) )
                           ],
                         ),
                       ],
                     ),
                   ),
                 ),
-                const SizedBox(width: 16),
+                SizedBox(width: cardSpacing),
                 Expanded(
                   child: Container(
                     padding: const EdgeInsets.all(15),
-                    decoration: BoxDecoration(color: const Color(0xFF1F2937), borderRadius: BorderRadius.circular(16)),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF1F2937),
+                      borderRadius: BorderRadius.circular(16),
+                    ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Row(
                           children: [
-                            SizedBox(height: 50, width: 50, child: Image.asset('assets/images/money_out.png')),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Column(
-                                    children: [
-                                      const InterText('Money Out', style: TextStyle(color: Colors.white70, fontSize: 14)),
-
-                                      const InterText('\$85.42', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 22)),
-                                    ],
-                                  ),
-                                ],
-                              ),
+                            SizedBox(
+                              height: 50,
+                              width: 50,
+                              child: Image.asset('assets/images/money_out.png'),
                             ),
+                            const SizedBox(width: 12),
+                            Expanded(child: 
+
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Column(
+                                                      
+                                  children: [
+                                    const InterText('Money Out', style: TextStyle(color: Colors.white70, fontSize: 14)),
+                                
+                                    const InterText('\$85.42', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 22)),
+                                  ],
+                                ),
+                              ],
+                            ) )
                           ],
                         ),
                       ],
@@ -153,116 +204,191 @@ class _HomeContent extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(height: 28),
+          SizedBox(height: sectionSpacing),
           // Alert card
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
+            padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
             child: Container(
               width: double.infinity,
-              padding: const EdgeInsets.only(top: 30, bottom: 60, left: 20, right: 20),
+              padding: EdgeInsets.only(
+                top: alertCardPadding * 1.5,
+                bottom: alertCardPadding * 3,
+                left: alertCardPadding,
+                right: alertCardPadding,
+              ),
               decoration: BoxDecoration(
                 image: const DecorationImage(image: AssetImage('assets/images/upcoming_bills.png'), fit: BoxFit.cover),
                 borderRadius: BorderRadius.circular(16),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
-                children: const [
+                children: [
                   InterText(
                     'You can get back track. Don\'t give up.',
-                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14 * scale,
+                    ),
                     textAlign: TextAlign.center,
                   ),
-                  SizedBox(height: 4),
+                  SizedBox(height: 4 * scale),
                   InterText(
                     '-\$2,414.58',
-                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 32),
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 32 * scale,
+                    ),
                     textAlign: TextAlign.center,
                   ),
-                  SizedBox(height: 2),
+                  SizedBox(height: 2 * scale),
                   InterText(
                     'Minus Pending and Future Transactions',
-                    style: TextStyle(color: Colors.white70, fontSize: 14),
+                    style: TextStyle(
+                      color: Colors.white70,
+                      fontSize: 14 * scale,
+                    ),
                     textAlign: TextAlign.center,
                   ),
                 ],
               ),
             ),
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: sectionSpacing * 0.5),
           // Connect bank button
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
+            padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
             child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 10),
+              padding: const EdgeInsets.symmetric(vertical: 10,),
               width: double.infinity,
               decoration: BoxDecoration(color: const Color(0xFF1F2937), borderRadius: BorderRadius.circular(12)),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SizedBox(height: 40, width: 40, child: Image.asset('assets/images/connect_account_icon.png')),
                   SizedBox(
+                    height: 40,
+                    width:40,
+                    child: Image.asset('assets/images/connect_account_icon.png')),
+                SizedBox(
                     // height: 120,
                     width: 220,
-                    child: Image.asset('assets/images/connect_account_text.png'),
-                  ),
-                ],
+                    child: Image.asset('assets/images/connect_account_text.png')),
+                  ],
               ),
             ),
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: sectionSpacing * 0.5),
           // Spending chart
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
+            padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
             child: Container(
               width: double.infinity,
-              decoration: BoxDecoration(color: const Color(0xFF1F2937), borderRadius: BorderRadius.circular(12)),
+              decoration: BoxDecoration(
+                color: const Color(0xFF1F2937),
+                borderRadius: BorderRadius.circular(12),
+              ),
               padding: const EdgeInsets.all(20),
               child: Column(
                 children: [
-                  const InterText("This Month's Spending", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
-                  const SizedBox(height: 16),
+                  InterText(
+                    "This Month's Spending",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16 * scale,
+                    ),
+                  ),
+                  SizedBox(height: sectionSpacing * 0.6),
                   // Custom circular chart
                   SizedBox(
-                    height: 160,
-                    width: 160,
+                    height: chartSize,
+                    width: chartSize,
                     child: Stack(
                       alignment: Alignment.center,
                       children: [
-                        CustomPaint(size: const Size(160, 160), painter: _SpendingChartPainter()),
+                        CustomPaint(
+                          size: const Size(160, 160),
+                          painter: _SpendingChartPainter(),
+                        ),
                         Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: const [
-                            Text('Surplus', style: TextStyle(color: Color(0xFF4ADE80), fontWeight: FontWeight.bold, fontSize: 16)),
+                            Text(
+                              'Surplus',
+                              style: TextStyle(
+                                color: Color(0xFF4ADE80),
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
+                            ),
                             SizedBox(height: 4),
-                            Text('￠2,414.58', style: TextStyle(color: Color(0xFF4ADE80), fontWeight: FontWeight.bold, fontSize: 22)),
+                            Text(
+                              '￠2,414.58',
+                              style: TextStyle(
+                                color: Color(0xFF4ADE80),
+                                fontWeight: FontWeight.bold,
+                                fontSize: 22,
+                              ),
+                            ),
                           ],
                         ),
                       ],
                     ),
                   ),
                   const SizedBox(height: 16),
-                  Divider(color: Color(0xFF9CA3AF), thickness: 1, height: 24),
+                  Divider(
+                    color: Color(0xFF9CA3AF),
+                    thickness: 1,
+                    height: 24,
+                  ),
                   const SizedBox(height: 16),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
-                        children: const [
-                          Icon(Icons.circle, color: Color(0xFFFB923C), size: 12),
-                          SizedBox(width: 8),
-                          InterText('Money Spent So Far', style: TextStyle(color: Colors.white70, fontSize: 14)),
+                        children: [
+                          Icon(Icons.circle, color: Color(0xFFFB923C), size: 12 * scale),
+                          SizedBox(width: 8 * scale),
+                          InterText(
+                            'Money Spent So Far',
+                            style: TextStyle(
+                              color: Colors.white70,
+                              fontSize: 14 * scale,
+                            ),
+                          ),
                           Spacer(),
-                          InterText('3%', style: TextStyle(color: Color(0xFFFB923C), fontWeight: FontWeight.bold, fontSize: 14)),
+                          InterText(
+                            '3%',
+                            style: TextStyle(
+                              color: Color(0xFFFB923C),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14 * scale,
+                            ),
+                          ),
                         ],
                       ),
-                      SizedBox(height: 12),
+                      SizedBox(height: 12 * scale),
                       Row(
-                        children: const [
-                          Icon(Icons.circle, color: Color(0xFF4ADE80), size: 12),
-                          SizedBox(width: 8),
-                          InterText('Budget Left', style: TextStyle(color: Colors.white70, fontSize: 14)),
+                        children: [
+                          Icon(Icons.circle, color: Color(0xFF4ADE80), size: 12 * scale),
+                          SizedBox(width: 8 * scale),
+                          InterText(
+                            'Budget Left',
+                            style: TextStyle(
+                              color: Colors.white70,
+                              fontSize: 14 * scale,
+                            ),
+                          ),
                           Spacer(),
-                          InterText('97%', style: TextStyle(color: Color(0xFF4ADE80), fontWeight: FontWeight.bold, fontSize: 14)),
+                          InterText(
+                            '97%',
+                            style: TextStyle(
+                              color: Color(0xFF4ADE80),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14 * scale,
+                            ),
+                          ),
                         ],
                       ),
                     ],
@@ -271,7 +397,7 @@ class _HomeContent extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(height: 24),
+          SizedBox(height: sectionSpacing),
         ],
       ),
     );
@@ -303,7 +429,10 @@ class _CustomNavbar extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               decoration: const BoxDecoration(
                 color: Color(0xFF23242A),
-                borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20),
+                  topRight: Radius.circular(20),
+                ),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -347,17 +476,23 @@ class _CustomNavbar extends StatelessWidget {
           Positioned(
             left: 0,
             right: 0,
-            bottom: 24,
+            bottom: 0.04.sh,
             child: Center(
               child: Container(
-                width: 72,
-                height: 72,
+                width: 64,
+                height: 64,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   gradient: _mainGradient,
                   boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.15), blurRadius: 8, offset: const Offset(0, 4))],
                 ),
-                child: Center(child: IconButton(icon: const Icon(Icons.add, color: Colors.white, size: 36), onPressed: () {}, splashRadius: 36)),
+                child: Center(
+                  child: IconButton(
+                    icon: const Icon(Icons.add, color: Colors.white, size: 36),
+                    onPressed: () {},
+                    splashRadius: 36,
+                  ),
+                ),
               ),
             ),
           ),
@@ -391,7 +526,10 @@ class _NavbarItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget iconWidget = Image.asset(isActive && selectedIcon != null ? selectedIcon! : icon, height: 44);
+    Widget iconWidget = Image.asset(
+      isActive && selectedIcon != null ? selectedIcon! : icon,
+      height: 44,
+    );
 
     return GestureDetector(onTap: onTap, behavior: HitTestBehavior.opaque, child: Column(mainAxisSize: MainAxisSize.min, children: [iconWidget]));
   }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
+import 'package:rivr_project/rivrBudgetFlow/view/dashboard/home_screen.dart';
 import '../../widgets/inter_text.dart';
 
 class RivrSubscriptionScreen extends StatelessWidget {
@@ -60,7 +62,7 @@ class RivrSubscriptionScreen extends StatelessWidget {
                                         ],
                                       ),
                                       const SizedBox(height: 2),
-                                      const InterText('US\$14.99/ billed annually', style: TextStyle(color: Colors.white54, fontSize: 12)),
+                                      const InterText('Includes 1 Free Bank Connection', style: TextStyle(color: Colors.white54, fontSize: 12)),
                                     ],
                                   ),
                                 ),
@@ -212,6 +214,7 @@ class RivrSubscriptionScreen extends StatelessWidget {
                     ),
                     const Spacer(),
                     // Update Plan Button
+                    SizedBox(height: 32),
                     Container(
                       width: double.infinity,
                       height: 54,
@@ -260,9 +263,9 @@ class _PlanSelectionBottomSheetState extends State<PlanSelectionBottomSheet> {
   int selectedPlan = 0; // 0: Starter, 1: Premium, 2: Advance
 
   final List<Map<String, String>> plans = [
-    {'name': 'Starter', 'price': 'US\$14.25/Year', 'desc': 'US\$14.99/ billed annually'},
+    {'name': 'Pro', 'price': 'US\$14.25/Year', 'desc': 'US\$14.99/ billed annually'},
     {'name': 'Premium', 'price': 'US\$14.25/Year', 'desc': 'US\$14.99/ billed annually'},
-    {'name': 'Advance', 'price': 'US\$14.25/Year', 'desc': 'US\$14.99/ billed annually'},
+    {'name': 'Ellite', 'price': 'US\$14.25/Year', 'desc': 'US\$14.99/ billed annually'},
   ];
 
   @override
@@ -274,7 +277,7 @@ class _PlanSelectionBottomSheetState extends State<PlanSelectionBottomSheet> {
           color: const Color(0xFF1F2937),
           borderRadius: const BorderRadius.only(topLeft: Radius.circular(28), topRight: Radius.circular(28)),
         ),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 38),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -328,7 +331,7 @@ class _PlanSelectionBottomSheetState extends State<PlanSelectionBottomSheet> {
                               borderRadius: BorderRadius.circular(8),
                               boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.08), blurRadius: 4, offset: const Offset(0, 2))],
                             ),
-                            child: const InterText('Current Plan', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12)),
+                            child: const InterText('Most Popular', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12)),
                           ),
                         ),
                     ],
@@ -421,7 +424,7 @@ class PaymentSuccessDialog extends StatelessWidget {
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                     ),
                     onPressed: () {
-                      Navigator.of(context).pop();
+                      Get.to(() => const HomeScreen());
                     },
                     child: const InterText('Continue', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
                   ),
