@@ -26,7 +26,7 @@ class _RivrSplashScreenState extends State<RivrSplashScreen> with SingleTickerPr
     ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutBack));
     _controller.forward();
     Future.delayed(const Duration(seconds: 4), () {
-      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const RivrLoginScreen()));
+      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const RivrPreLoginScreen()));
     });
   }
 

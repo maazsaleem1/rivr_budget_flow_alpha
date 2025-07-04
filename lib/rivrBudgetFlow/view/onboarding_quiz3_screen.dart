@@ -207,7 +207,7 @@ class _OnboardingQuiz3ScreenState extends State<OnboardingQuiz3Screen> {
             children: [
               Image.asset(category['icon'], width: 32, height: 32),
               const SizedBox(width: 12),
-              InterText(category['title'], style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 16)),
+              InterText(category['title'], style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 13)),
               if (showNeed) ...[
                 const SizedBox(width: 8),
                 Container(
@@ -263,7 +263,7 @@ class _OnboardingQuiz3ScreenState extends State<OnboardingQuiz3Screen> {
                         children: [
                           Image.asset('assets/images/setbudgeticon.png', width: 16, height: 16),
                           const SizedBox(width: 6),
-                          const InterText('SET BUDGET', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 12)),
+                          const InterText('SET BUDGET', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 10)),
                         ],
                       ),
                     ),
@@ -507,7 +507,7 @@ class _OnboardingQuiz3ScreenState extends State<OnboardingQuiz3Screen> {
             children: [
               Image.asset(category['icon'], width: 32, height: 32),
               const SizedBox(width: 12),
-              InterText(category['title'], style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 16)),
+              InterText(category['title'], style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 13)),
               if (showNeed) ...[
                 const SizedBox(width: 8),
                 Container(
@@ -563,7 +563,7 @@ class _OnboardingQuiz3ScreenState extends State<OnboardingQuiz3Screen> {
                         children: [
                           Image.asset('assets/images/setbudgeticon.png', width: 16, height: 16),
                           const SizedBox(width: 6),
-                          const InterText('SET BUDGET', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 12)),
+                          const InterText('SET BUDGET', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 10)),
                         ],
                       ),
                     ),

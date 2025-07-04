@@ -16,7 +16,7 @@ class RivrPreLoginScreen extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 24),
           child: Column(
             children: [
-              const SizedBox(height: 48),
+              const SizedBox(height: 8),
               // Logo in circle
               Center(
                 child: Container(
@@ -29,7 +29,7 @@ class RivrPreLoginScreen extends StatelessWidget {
                   child: Center(child: Image.asset('assets/images/preLoginLogo.png', width: 220, height: 220)),
                 ),
               ),
-              const SizedBox(height: 36),
+              const SizedBox(height: 28),
               // App name
               const InterText('Rivr BudgetFlow', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 24)),
               const SizedBox(height: 16),
@@ -51,7 +51,7 @@ class RivrPreLoginScreen extends StatelessWidget {
                 height: 54,
                 child: ElevatedButton.icon(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF23242A),
+                    backgroundColor: const Color(0xFF1F2937),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                     elevation: 0,
                   ),
@@ -67,7 +67,7 @@ class RivrPreLoginScreen extends StatelessWidget {
                 height: 54,
                 child: ElevatedButton.icon(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF23242A),
+                    backgroundColor: const Color(0xFF1F2937),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                     elevation: 0,
                   ),
@@ -110,6 +110,14 @@ class RivrPreLoginScreen extends StatelessWidget {
                     },
                   ),
                 ),
+              ),
+              const SizedBox(height: 24),
+              // Add the dollar image at the bottom
+              Image.asset(
+                'assets/images/pre_login_dollar.png',
+                width: double.infinity,
+                height: 90,
+                fit: BoxFit.cover,
               ),
               const Spacer(),
             ],
