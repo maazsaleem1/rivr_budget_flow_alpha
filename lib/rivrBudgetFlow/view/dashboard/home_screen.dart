@@ -2,46 +2,23 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:table_calendar/table_calendar.dart';
+import 'package:intl/intl.dart';
 
 import '../../../widgets/custom_app_bar.dart';
 import '../../../widgets/inter_text.dart';
 import 'activity_screen.dart';
 import 'budget_screen.dart';
 import 'goals_screen.dart';
+import '../../../controller/home_controller.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  int _selectedIndex = 0;
-
-  Widget _getScreen(int index) {
-    switch (index) {
-      case 0:
-        return _HomeContent();
-      case 1:
-        return const BudgetScreen();
-      case 2:
-        return const GoalsScreen();
-      case 3:
-        return const ActivityScreen();
-      default:
-        return _HomeContent();
-    }
-  }
-
-  void _onNavTap(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final HomeController controller = Get.put(HomeController());
     final size = MediaQuery.of(context).size;
     final width = size.width;
     final height = size.height;
@@ -57,6 +34,21 @@ class _HomeScreenState extends State<HomeScreen> {
     final connectTextWidth = width * 0.5;
     final chartSize = width * 0.42;
 
+    Widget getScreen(int index) {
+      switch (index) {
+        case 0:
+          return _HomeContent();
+        case 1:
+          return const BudgetScreen();
+        case 2:
+          return const GoalsScreen();
+        case 3:
+          return const ActivityScreen();
+        default:
+          return _HomeContent();
+      }
+    }
+
     return Scaffold(
       backgroundColor: const Color(0xFF121A28),
       appBar: CustomAppBar(
@@ -67,8 +59,11 @@ class _HomeScreenState extends State<HomeScreen> {
       body: SafeArea(
         child: Stack(
           children: [
-            Positioned.fill(child: _getScreen(_selectedIndex)),
-            Align(alignment: Alignment.bottomCenter, child: _CustomNavbar(selectedIndex: _selectedIndex, onTap: _onNavTap)),
+            Obx(() => Positioned.fill(child: getScreen(controller.selectedIndex.value))),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Obx(() => _CustomNavbar(selectedIndex: controller.selectedIndex.value, onTap: controller.onNavTap)),
+            ),
           ],
         ),
       ),
@@ -80,6 +75,7 @@ class _HomeScreenState extends State<HomeScreen> {
 class _HomeContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final HomeController controller = Get.find<HomeController>();
     final size = MediaQuery.of(context).size;
     final width = size.width;
     final height = size.height;
@@ -108,12 +104,17 @@ class _HomeContent extends StatelessWidget {
                 SizedBox(height: 16 * scale),
                 Align(
                   alignment: Alignment.topLeft,
-                  child: InterText('Welcome back, Jane!', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20)),
+                  child: Obx(
+                    () => InterText(
+                      'Welcome back, ${controller.userName.value}!',
+                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),
+                    ),
+                  ),
                 ),
                 SizedBox(height: 4),
-                InterText('We love your progress. Keep it up.', style: TextStyle(color: Colors.white70, fontSize: 14)),
+                Obx(() => InterText(controller.welcomeMessage.value, style: TextStyle(color: Colors.white70, fontSize: 14))),
                 SizedBox(height: 10),
-                InterText('June Budget So Far', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
+                Obx(() => InterText(controller.budgetTitle.value, style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16))),
               ],
             ),
           ),
@@ -135,15 +136,22 @@ class _HomeContent extends StatelessWidget {
                             SizedBox(height: 50, width: 50, child: Image.asset('assets/images/money_in.png')),
                             const SizedBox(width: 12),
                             Expanded(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Column(
-                                    children: [
-                                      const InterText('Money In', style: TextStyle(color: Colors.white70, fontSize: 14)),
-
-                                      const InterText('\$2,500', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 22)),
-                                    ],
+                                  const InterText(
+                                    'Money In',
+                                    style: TextStyle(color: Colors.white70, fontSize: 18),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  Obx(
+                                    () => InterText(
+                                      '\$4${controller.moneyIn.value.toStringAsFixed(2)}',
+                                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -167,15 +175,22 @@ class _HomeContent extends StatelessWidget {
                             SizedBox(height: 50, width: 50, child: Image.asset('assets/images/money_out.png')),
                             const SizedBox(width: 12),
                             Expanded(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Column(
-                                    children: [
-                                      const InterText('Money Out', style: TextStyle(color: Colors.white70, fontSize: 14)),
-
-                                      const InterText('\$85.42', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 22)),
-                                    ],
+                                  const InterText(
+                                    'Money Out',
+                                    style: TextStyle(color: Colors.white70, fontSize: 18),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  Obx(
+                                    () => InterText(
+                                      '\$4${controller.moneyOut.value.toStringAsFixed(2)}',
+                                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -430,12 +445,12 @@ class _HomeContent extends StatelessWidget {
                   ),
                   SizedBox(height: 20.h),
                   SizedBox(
-                    width: 170.w,
-                    height: 40.h,
+                    width: double.infinity,
+                    height: 44.h,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF008FED),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
                         elevation: 0,
                       ),
                       onPressed: () {},
@@ -447,6 +462,380 @@ class _HomeContent extends StatelessWidget {
             ),
           ),
           SizedBox(height: sectionSpacing),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+            child: Obx(
+              () => Column(
+                children: [
+                  // Toggle
+                  Container(
+                    padding: EdgeInsets.all(6),
+                    decoration: BoxDecoration(color: const Color(0xFF1F2937), borderRadius: BorderRadius.circular(8)),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () => controller.selectHomeTab(0),
+                            child: Container(
+                              padding: EdgeInsets.symmetric(vertical: 12),
+                              decoration: BoxDecoration(
+                                color: controller.homeTabIndex.value == 0 ? const Color(0xFF020817) : Colors.transparent,
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                              alignment: Alignment.center,
+                              child: Text('Categories', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600)),
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 8),
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () => controller.selectHomeTab(1),
+                            child: Container(
+                              padding: EdgeInsets.symmetric(vertical: 12),
+                              decoration: BoxDecoration(
+                                color: controller.homeTabIndex.value == 1 ? const Color(0xFF020817) : Colors.transparent,
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                              alignment: Alignment.center,
+                              child: Text('Transactions', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600)),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  if (controller.homeTabIndex.value == 0) ...[
+                    SizedBox(height: 18),
+                    Center(child: Text('Budget Categories', style: TextStyle(color: Color(0xFF9CA3AF), fontSize: 15, fontWeight: FontWeight.w500))),
+                    SizedBox(height: 12),
+                    ...controller.categories.map(
+                      (cat) => Padding(
+                        padding: const EdgeInsets.only(bottom: 12),
+                        child: _CategoryCard(
+                          image: cat.image,
+                          title: cat.title,
+                          amount: cat.amount,
+                          total: cat.total,
+                          percent: cat.percent,
+                          editIcon: cat.editIcon,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 8),
+                  ],
+                  if (controller.homeTabIndex.value == 1) ...[
+                    SizedBox(height: 18),
+                    Center(child: Text('Budget Categories', style: TextStyle(color: Color(0xFF9CA3AF), fontSize: 15, fontWeight: FontWeight.w500))),
+                    SizedBox(height: 12),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+                      child: _TransactionCard(
+                        image: 'assets/images/heb.png',
+                        title: 'H-E-B',
+                        subtitle: 'Food · Today, 2:30 PM',
+                        amount: '-\$85.42',
+                        amountColor: Color(0xFFDC2625),
+                        expandedTitle: 'H-E-B',
+                        expandedSubtitle: '',
+                        buttons: [
+                          _TransactionButton(label: 'Assign to Goal', color: Color(0xFF020817), onPressed: () => showAssignToGoalDialog(context)),
+                          _TransactionButton(
+                            label: 'Edit',
+                            color: Color(0xFF020817),
+                            onPressed: () => showEditTransactionDialog(context, horizontalPadding),
+                          ),
+                          _TransactionButton(label: 'Delete', color: Color(0xFFDC2625), onPressed: () {}),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 12),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+                      child: _TransactionCard(
+                        image: 'assets/images/chase.png',
+                        title: 'Salary Deposit - Chase (3505)',
+                        subtitle: 'Income · Yesterday',
+                        amount: '+\$2500.00',
+                        amountColor: Color(0xFF22C55D),
+                        expandedTitle: 'Monthly salary',
+                        expandedSubtitle: '',
+                        buttons: [
+                          _TransactionButton(label: 'Assign to Goal', color: Color(0xFF020817), onPressed: () => showAssignToGoalDialog(context)),
+                          _TransactionButton(
+                            label: 'Edit',
+                            color: Color(0xFF020817),
+                            onPressed: () => showEditTransactionDialog(context, horizontalPadding),
+                          ),
+                          _TransactionButton(label: 'Delete', color: Color(0xFFDC2625), onPressed: () {}),
+                        ],
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+          ),
+          SizedBox(height: 8),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+            child: SizedBox(
+              width: double.infinity,
+              child: OutlinedButton(
+                style: OutlinedButton.styleFrom(
+                  side: BorderSide(color: Color(0xFF6B7280)),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                  padding: EdgeInsets.symmetric(vertical: 14),
+                ),
+                onPressed: () {},
+                child: Text('View All Expense Categories', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 15)),
+              ),
+            ),
+          ),
+          SizedBox(height: 20),
+          // Budgeting Goals Box
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+            child: Container(
+              width: double.infinity,
+              padding: EdgeInsets.symmetric(vertical: 28, horizontal: 16),
+              decoration: BoxDecoration(color: Color(0xFF020817), borderRadius: BorderRadius.circular(16)),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    'Budgeting Goals',
+                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 10),
+                  Text("You don't have any active goals yet.", style: TextStyle(color: Color(0xFF9CA3AF), fontSize: 15), textAlign: TextAlign.center),
+                  SizedBox(height: 18),
+                  SizedBox(
+                    width: 160,
+                    height: 40,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        padding: EdgeInsets.zero,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                        elevation: 0,
+                        backgroundColor: Colors.transparent,
+                      ),
+                      onPressed: () {},
+                      child: Ink(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [Color(0xFF008FED), Color(0xFF00D1E9)],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Container(
+                          alignment: Alignment.center,
+                          child: Text('Create a Goal', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 15)),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          SizedBox(height: 24),
+          // Budgeting Tips Heading
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+            child: Text('Budgeting Tips', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20)),
+          ),
+          SizedBox(height: 16),
+          // Tips List
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+            child: Column(
+              children: [
+                _TipsTile(title: 'Tips to Improve Your Financial Health'),
+                Divider(color: Color(0xFF374151), height: 1),
+                _TipsTile(title: 'Debt Management Strategies'),
+                Divider(color: Color(0xFF374151), height: 1),
+                _TipsTile(title: 'Saving & Investment Basics'),
+              ],
+            ),
+          ),
+          SizedBox(height: 28),
+          // Need Help Getting Started
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+            child: Text(
+              'Need Help Getting Started?',
+              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          SizedBox(height: 16),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+            child: Container(
+              width: double.infinity,
+              padding: EdgeInsets.symmetric(vertical: 28, horizontal: 16),
+              decoration: BoxDecoration(color: Color(0xFF020817), borderRadius: BorderRadius.circular(16)),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    'Watch our Quick Tutorial',
+                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 17),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 10),
+                  Text(
+                    'Learn how to make the most of your financial dashboard',
+                    style: TextStyle(color: Color(0xFF9CA3AF), fontSize: 15),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 18),
+                  SizedBox(
+                    width: 140,
+                    height: 38,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        padding: EdgeInsets.zero,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                        elevation: 0,
+                        backgroundColor: Colors.transparent,
+                      ),
+                      onPressed: () {},
+                      child: Ink(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [Color(0xFF008FED), Color(0xFF00D1E9)],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Container(
+                          alignment: Alignment.center,
+                          child: Text('Watch Video', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 15)),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// Category Card Widget
+class _CategoryCard extends StatelessWidget {
+  final String image;
+  final String title;
+  final String amount;
+  final String total;
+  final int percent;
+  final String editIcon;
+
+  const _CategoryCard({
+    required this.image,
+    required this.title,
+    required this.amount,
+    required this.total,
+    required this.percent,
+    required this.editIcon,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(color: Color(0xFF1F2937), borderRadius: BorderRadius.circular(12)),
+      padding: EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Image.asset(image, width: 32, height: 32),
+              SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                    ),
+                    SizedBox(height: 2),
+                    Row(
+                      children: [
+                        ShaderMask(
+                          shaderCallback:
+                              (bounds) => LinearGradient(
+                                colors: [Color(0xFF008FED), Color(0xFF00D1E9)],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                              ).createShader(bounds),
+                          child: Text('\$240', style: TextStyle(color: Colors.white, fontSize: 12)),
+                        ),
+                        Text(' / ', style: TextStyle(color: Color(0xFF9CA3AF), fontSize: 12)),
+                        Text('\$150', style: TextStyle(color: Color(0xFF9CA3AF), fontSize: 12)),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(width: 8),
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text('0%', style: TextStyle(color: Color(0xff22C55D), fontWeight: FontWeight.bold, fontSize: 12)),
+                  SizedBox(height: 2),
+                  GestureDetector(onTap: () {}, child: Image.asset(editIcon, width: 20, height: 20)),
+                ],
+              ),
+            ],
+          ),
+          SizedBox(height: 10),
+          // Progress bar
+          ClipRRect(
+            borderRadius: BorderRadius.circular(6),
+            child: LinearProgressIndicator(
+              value: percent / 100,
+              minHeight: 8,
+              backgroundColor: Color(0xFF374151),
+              valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF3B82F6)),
+            ),
+          ),
+          SizedBox(height: 10),
+          Row(
+            children: [
+              Text('Line-items', style: TextStyle(color: Color(0xFF9CA3AF), fontSize: 12)),
+              Spacer(),
+              Text('0 items', style: TextStyle(color: Color(0xFF9CA3AF), fontSize: 12)),
+            ],
+          ),
+          SizedBox(height: 6),
+          Center(
+            child: Text.rich(
+              TextSpan(
+                children: [
+                  TextSpan(text: 'No line-items yet. ', style: TextStyle(color: Color(0xFF3B82F6), fontSize: 13)),
+                  TextSpan(text: 'Click to add some.', style: TextStyle(color: Color(0xFF06B6D4), fontSize: 13, fontWeight: FontWeight.w600)),
+                ],
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
         ],
       ),
     );
@@ -707,4 +1096,597 @@ class _ProfileDialogTile extends StatelessWidget {
       onTap: onTap,
     );
   }
+}
+
+class _TipsTile extends StatelessWidget {
+  final String title;
+  const _TipsTile({required this.title});
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      contentPadding: EdgeInsets.zero,
+      title: Text(title, style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w500)),
+      trailing: Icon(Icons.keyboard_arrow_down_rounded, color: Colors.white, size: 26),
+      onTap: () {},
+    );
+  }
+}
+
+class _TransactionCard extends StatefulWidget {
+  final String image;
+  final String title;
+  final String subtitle;
+  final String amount;
+  final Color amountColor;
+  final String expandedTitle;
+  final String expandedSubtitle;
+  final List<_TransactionButton> buttons;
+
+  const _TransactionCard({
+    super.key,
+    required this.image,
+    required this.title,
+    required this.subtitle,
+    required this.amount,
+    required this.amountColor,
+    required this.expandedTitle,
+    required this.expandedSubtitle,
+    required this.buttons,
+  });
+
+  @override
+  State<_TransactionCard> createState() => _TransactionCardState();
+}
+
+class _TransactionCardState extends State<_TransactionCard> {
+  bool expanded = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(color: Color(0xFF1F2937), borderRadius: BorderRadius.circular(14)),
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Image.asset(widget.image),
+                SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(widget.title, style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12)),
+                      SizedBox(height: 2),
+                      Text(widget.subtitle, style: TextStyle(color: Color(0xFF9CA3AF), fontSize: 12)),
+                    ],
+                  ),
+                ),
+                Text(widget.amount, style: TextStyle(color: widget.amountColor, fontWeight: FontWeight.bold, fontSize: 14)),
+                IconButton(
+                  icon: AnimatedRotation(
+                    turns: expanded ? 0.5 : 0.0,
+                    duration: Duration(milliseconds: 200),
+                    child: Icon(Icons.keyboard_arrow_down_rounded, color: Colors.white, size: 28),
+                  ),
+                  onPressed: () => setState(() => expanded = !expanded),
+                ),
+              ],
+            ),
+          ),
+          if (expanded) ...[
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(widget.expandedTitle, style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15)),
+                  SizedBox(height: 10),
+                  Row(mainAxisAlignment: MainAxisAlignment.start, children: widget.buttons),
+                ],
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+class _TransactionButton extends StatelessWidget {
+  final String label;
+  final Color color;
+  final VoidCallback? onPressed;
+
+  const _TransactionButton({super.key, required this.label, required this.color, this.onPressed});
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: color,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7)),
+        elevation: 0,
+        minimumSize: Size(0, 38),
+        padding: EdgeInsets.symmetric(horizontal: 12),
+      ),
+      onPressed: onPressed,
+      child: Text(
+        label,
+        style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 10),
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+      ),
+    );
+  }
+}
+
+// 1. Update showEditTransactionDialog to accept horizontalPadding as a parameter
+void showEditTransactionDialog(BuildContext context, double horizontalPadding) {
+  showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (context) {
+      int transactionType = 0; // 0: Expense, 1: Income
+      DateTime _selectedDate = DateTime.now();
+      TextEditingController _dateController = TextEditingController(text: 'Today');
+      return StatefulBuilder(
+        builder: (context, setState) {
+          return Dialog(
+            backgroundColor: const Color(0xFF111827),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: 24),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(child: Text('Edit Transaction', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18))),
+                        GestureDetector(onTap: () => Navigator.of(context).pop(), child: Icon(Icons.close, color: Colors.white, size: 24)),
+                      ],
+                    ),
+                    SizedBox(height: 6),
+                    Text('Update the details of your transaction.', style: TextStyle(color: Color(0xFF9CA3AF), fontSize: 14)),
+                    SizedBox(height: 22),
+                    Text('Transaction Name', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 13)),
+                    SizedBox(height: 6),
+                    Container(
+                      decoration: BoxDecoration(color: Color(0xFF1F2937), borderRadius: BorderRadius.circular(8)),
+                      child: TextField(
+                        style: TextStyle(color: Colors.white),
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+                          hintText: 'HEB',
+                          hintStyle: TextStyle(color: Color(0xFF9CA3AF)),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 18),
+                    Text('Transaction Type', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 13)),
+                    SizedBox(height: 6),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () => setState(() => transactionType = 0),
+                            child: Container(
+                              height: 40,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                                gradient: transactionType == 0 ? LinearGradient(colors: [Color(0xFF008FED), Color(0xFF00D1E9)]) : null,
+                                color: transactionType == 0 ? null : Color(0xFF1F2937),
+                              ),
+                              alignment: Alignment.center,
+                              child: Text('Expense', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600)),
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 10),
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () => setState(() => transactionType = 1),
+                            child: Container(
+                              height: 40,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                                gradient: transactionType == 1 ? LinearGradient(colors: [Color(0xFF008FED), Color(0xFF00D1E9)]) : null,
+                                color: transactionType == 1 ? null : Color(0xFF1F2937),
+                              ),
+                              alignment: Alignment.center,
+                              child: Text('Income', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600)),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 18),
+                    Text('Amount', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 13)),
+                    SizedBox(height: 6),
+                    Container(
+                      decoration: BoxDecoration(color: Color(0xFF1F2937), borderRadius: BorderRadius.circular(8)),
+                      child: TextField(
+                        style: TextStyle(color: Colors.white),
+                        keyboardType: TextInputType.numberWithOptions(decimal: true),
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+                          prefixIcon: Padding(
+                            padding: EdgeInsets.only(left: 8, right: 8),
+                            child: Image.asset('assets/images/dollaricon.png', width: 18, height: 18),
+                          ),
+                          prefixIconConstraints: BoxConstraints(minWidth: 32, minHeight: 32),
+                          hintText: '56.88',
+                          hintStyle: TextStyle(color: Color(0xFF9CA3AF)),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 18),
+                    Text('Budget Category', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 13)),
+                    SizedBox(height: 6),
+                    Container(
+                      decoration: BoxDecoration(color: Color(0xFF1F2937), borderRadius: BorderRadius.circular(8)),
+                      child: TextField(
+                        style: TextStyle(color: Colors.white),
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+                          prefixIcon: Padding(
+                            padding: EdgeInsets.only(left: 8, right: 8),
+                            child: Image.asset('assets/images/dollaricon.png', width: 18, height: 18),
+                          ),
+                          prefixIconConstraints: BoxConstraints(minWidth: 32, minHeight: 32),
+                          hintText: 'Food / \$85.42',
+                          hintStyle: TextStyle(color: Color(0xFF9CA3AF)),
+                          suffixIcon: Icon(Icons.keyboard_arrow_down_rounded, color: Color(0xFF9CA3AF)),
+                        ),
+                        readOnly: true,
+                        onTap: () {}, // TODO: Implement category dropdown
+                      ),
+                    ),
+                    SizedBox(height: 18),
+                    Text('Line Item (Optional)', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 13)),
+                    SizedBox(height: 6),
+                    Container(
+                      decoration: BoxDecoration(color: Color(0xFF1F2937), borderRadius: BorderRadius.circular(8)),
+                      child: TextField(
+                        style: TextStyle(color: Colors.white),
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+                          hintText: 'Select a line item (optional)',
+                          hintStyle: TextStyle(color: Color(0xFF9CA3AF)),
+                          suffixIcon: Icon(Icons.keyboard_arrow_down_rounded, color: Color(0xFF9CA3AF)),
+                        ),
+                        readOnly: true,
+                        onTap: () {}, // TODO: Implement line item dropdown
+                      ),
+                    ),
+                    SizedBox(height: 18),
+                    Text('Date', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 13)),
+                    SizedBox(height: 6),
+                    Container(
+                      decoration: BoxDecoration(color: Color(0xFF1F2937), borderRadius: BorderRadius.circular(8)),
+                      child: TextField(
+                        style: TextStyle(color: Colors.white),
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+                          prefixIcon: Padding(
+                            padding: EdgeInsets.only(left: 8, right: 8),
+                            child: Image.asset('assets/images/calendar.png', width: 18, height: 18),
+                          ),
+                          prefixIconConstraints: BoxConstraints(minWidth: 32, minHeight: 32),
+                          hintText: 'Today',
+                          hintStyle: TextStyle(color: Color(0xFF9CA3AF)),
+                        ),
+                        readOnly: true,
+                        onTap: () async {
+                          DateTime? picked = await showCustomDatePicker(context, _selectedDate);
+                          if (picked != null) {
+                            setState(() {
+                              _selectedDate = picked;
+                              if (isSameDay(_selectedDate, DateTime.now())) {
+                                _dateController.text = 'Today';
+                              } else if (isSameDay(_selectedDate, DateTime.now().subtract(Duration(days: 1)))) {
+                                _dateController.text = 'Yesterday';
+                              } else {
+                                _dateController.text = '${_selectedDate.day}/${_selectedDate.month}/${_selectedDate.year}';
+                              }
+                            });
+                          }
+                        },
+                        controller: _dateController,
+                      ),
+                    ),
+                    SizedBox(height: 18),
+                    Text('Notes (Optional)', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 13)),
+                    SizedBox(height: 6),
+                    Container(
+                      decoration: BoxDecoration(color: Color(0xFF1F2937), borderRadius: BorderRadius.circular(8)),
+                      child: TextField(
+                        style: TextStyle(color: Colors.white),
+                        maxLines: 2,
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+                          hintText: 'Weekly grocery shopping',
+                          hintStyle: TextStyle(color: Color(0xFF9CA3AF)),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 24),
+                    SizedBox(
+                      width: double.infinity,
+                      height: 44,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          padding: EdgeInsets.zero,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                          elevation: 0,
+                          backgroundColor: Colors.transparent,
+                        ),
+                        onPressed: () {},
+                        child: Ink(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [Color(0xFF008FED), Color(0xFF00D1E9)],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Container(
+                            alignment: Alignment.center,
+                            child: Text('Update Transaction', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 15)),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
+      );
+    },
+  );
+}
+
+Future<DateTime?> showCustomDatePicker(BuildContext context, DateTime initialDate) async {
+  DateTime selectedDate = initialDate;
+  return showDialog<DateTime>(
+    context: context,
+    barrierDismissible: true,
+    builder: (context) {
+      return StatefulBuilder(
+        builder: (context, setState) {
+          return Dialog(
+            backgroundColor: const Color(0xFF111827),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TableCalendar(
+                    firstDay: DateTime(2000),
+                    lastDay: DateTime(2100),
+                    focusedDay: selectedDate,
+                    currentDay: selectedDate,
+                    selectedDayPredicate: (day) => isSameDay(day, selectedDate),
+                    onDaySelected: (day, focusedDay) {
+                      setState(() {
+                        selectedDate = day;
+                      });
+                    },
+                    calendarStyle: CalendarStyle(
+                      todayDecoration: BoxDecoration(color: Color(0xFF374151), borderRadius: BorderRadius.circular(8)),
+                      selectedDecoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [Color(0xFF008FED), Color(0xFF00D1E9)],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      defaultTextStyle: TextStyle(color: Colors.white),
+                      weekendTextStyle: TextStyle(color: Colors.white),
+                      todayTextStyle: TextStyle(color: Colors.white),
+                      selectedTextStyle: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                      outsideTextStyle: TextStyle(color: Color(0xFF6B7280)),
+                    ),
+                    headerStyle: HeaderStyle(
+                      titleCentered: true,
+                      formatButtonVisible: false,
+                      titleTextStyle: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
+                      leftChevronIcon: Icon(Icons.chevron_left, color: Colors.white),
+                      rightChevronIcon: Icon(Icons.chevron_right, color: Colors.white),
+                      decoration: BoxDecoration(color: Colors.transparent),
+                    ),
+                    calendarBuilders: CalendarBuilders(
+                      dowBuilder: (context, day) {
+                        final text = DateFormat.E().format(day); // 'Sun', 'Mon', etc.
+                        return Container(
+                          alignment: Alignment.center,
+                          child: Text(text, style: TextStyle(color: Color(0xFF9CA3AF), fontWeight: FontWeight.w600)),
+                        );
+                      },
+                      defaultBuilder: (context, day, focusedDay) {
+                        return Container(
+                          margin: EdgeInsets.all(4),
+                          decoration: BoxDecoration(color: Color(0xFF1F2937), borderRadius: BorderRadius.circular(8)),
+                          alignment: Alignment.center,
+                          child: Text('${day.day}', style: TextStyle(color: Colors.white)),
+                        );
+                      },
+                      todayBuilder: (context, day, focusedDay) {
+                        return Container(
+                          margin: EdgeInsets.all(4),
+                          decoration: BoxDecoration(color: Color(0xFF374151), borderRadius: BorderRadius.circular(8)),
+                          alignment: Alignment.center,
+                          child: Text('${day.day}', style: TextStyle(color: Colors.white)),
+                        );
+                      },
+                      selectedBuilder: (context, day, focusedDay) {
+                        return Container(
+                          margin: EdgeInsets.all(4),
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [Color(0xFF008FED), Color(0xFF00D1E9)],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          alignment: Alignment.center,
+                          child: Text('${day.day}', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                        );
+                      },
+                    ),
+                  ),
+                  SizedBox(height: 12),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          TextButton(
+                            onPressed: () {
+                              setState(() {
+                                selectedDate = DateTime.now();
+                              });
+                            },
+                            child: Text('Today', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              setState(() {
+                                selectedDate = DateTime.now().subtract(Duration(days: 1));
+                              });
+                            },
+                            child: Text('Yesterday', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                          ),
+                        ],
+                      ),
+
+                      Row(
+                        children: [
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Color(0xFF374151),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                              elevation: 0,
+                            ),
+                            onPressed: () {
+                              Navigator.of(context).pop(selectedDate);
+                            },
+                            child: Text('Done', style: TextStyle(color: Colors.white)),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      );
+    },
+  );
+}
+
+// Add this function to show the Assign to Goal dialog
+void showAssignToGoalDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (context) {
+      return Dialog(
+        backgroundColor: const Color(0xFF111827),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Image.asset('assets/images/assigntogoal.png', width: 28, height: 28),
+                  SizedBox(width: 10),
+                  Expanded(child: Text('Assign to Goal', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18))),
+                  GestureDetector(onTap: () => Navigator.of(context).pop(), child: Icon(Icons.close, color: Colors.white, size: 24)),
+                ],
+              ),
+              SizedBox(height: 12),
+              Text('Select a goal to assign this transaction to.', style: TextStyle(color: Color(0xFF9CA3AF), fontSize: 14)),
+              SizedBox(height: 24),
+              Center(
+                child: Column(
+                  children: [
+                    Text('No goals available', style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600)),
+                    SizedBox(height: 4),
+                    Text('Create a goal first to assign transactions.', style: TextStyle(color: Color(0xFF9CA3AF), fontSize: 14)),
+                  ],
+                ),
+              ),
+              SizedBox(height: 24),
+              Divider(color: Color(0xFF374151), height: 1),
+              SizedBox(height: 18),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  OutlinedButton(
+                    style: OutlinedButton.styleFrom(
+                      side: BorderSide(color: Colors.white24),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                      padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                    ),
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: Text('Cancel', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500)),
+                  ),
+                  SizedBox(width: 12),
+                  SizedBox(
+                    height: 40,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        padding: EdgeInsets.zero,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                        elevation: 0,
+                        backgroundColor: Colors.transparent,
+                      ),
+                      onPressed: () {},
+                      child: Ink(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [Color(0xFF008FED), Color(0xFF00D1E9)],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Container(
+                          alignment: Alignment.center,
+                          padding: EdgeInsets.symmetric(horizontal: 24),
+                          child: Text('Assign', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600)),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      );
+    },
+  );
 }

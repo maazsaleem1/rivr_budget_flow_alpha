@@ -43,6 +43,7 @@ dependencies:
   flutter_spinkit: ^5.2.1
 
   percent_indicator: ^4.2.3
+  table_calendar: ^3.2.0
 
 dev_dependencies:
   flutter_test:
