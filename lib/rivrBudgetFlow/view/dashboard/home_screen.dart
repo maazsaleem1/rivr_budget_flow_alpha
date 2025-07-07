@@ -1246,7 +1246,7 @@ void showEditTransactionDialog(BuildContext context, double horizontalPadding) {
                   children: [
                     Row(
                       children: [
-                        Expanded(child: Text('Edit Transaction', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18))),
+                        Expanded(child: Text('Add Transaction', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18))),
                         GestureDetector(onTap: () => Navigator.of(context).pop(), child: Icon(Icons.close, color: Colors.white, size: 24)),
                       ],
                     ),
