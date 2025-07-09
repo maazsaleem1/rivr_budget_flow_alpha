@@ -3,6 +3,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:rivr_project/rivrBudgetFlow/view/dashboard/calendar_transaction_history_screen.dart';
+import 'package:rivr_project/rivrBudgetFlow/view/dashboard/help_and_support_screen.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
 
@@ -12,6 +14,8 @@ import 'activity_screen.dart';
 import 'budget_screen.dart';
 import 'goals_screen.dart';
 import '../../../controller/home_controller.dart';
+import 'package:rivr_project/rivrBudgetFlow/view/dashboard/app_settings_screen.dart';
+import 'package:rivr_project/rivrBudgetFlow/view/dashboard/contact_support_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -56,17 +60,8 @@ class HomeScreen extends StatelessWidget {
           showDialog(context: context, barrierColor: Colors.black54, builder: (context) => const ProfileDialog());
         },
       ),
-      body: SafeArea(
-        child: Stack(
-          children: [
-            Obx(() => Positioned.fill(child: getScreen(controller.selectedIndex.value))),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Obx(() => _CustomNavbar(selectedIndex: controller.selectedIndex.value, onTap: controller.onNavTap)),
-            ),
-          ],
-        ),
-      ),
+      body: Stack(children: [Positioned.fill(child: Obx(() => getScreen(controller.selectedIndex.value)))]),
+      bottomNavigationBar: Obx(() => _CustomNavbar(selectedIndex: controller.selectedIndex.value, onTap: controller.onNavTap)),
     );
   }
 }
@@ -908,23 +903,7 @@ class _CustomNavbar extends StatelessWidget {
             ),
           ),
           // Floating center FAB
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 0.04.sh,
-            child: Center(
-              child: Container(
-                width: 64,
-                height: 64,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: _mainGradient,
-                  boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.15), blurRadius: 8, offset: const Offset(0, 4))],
-                ),
-                child: Center(child: IconButton(icon: const Icon(Icons.add, color: Colors.white, size: 36), onPressed: () {}, splashRadius: 36)),
-              ),
-            ),
-          ),
+          Positioned(left: 0, right: 0, bottom: 0.04.sh, child: Center(child: _FabWithBubbleMenu())),
         ],
       ),
     );
@@ -1035,15 +1014,45 @@ class ProfileDialog extends StatelessWidget {
             ),
             SizedBox(height: 18.h),
             Divider(color: Color(0x339CA3AF), thickness: 1.h),
-            _ProfileDialogTile(icon: 'assets/images/accounticon.png', text: 'Account Information', onTap: () {}),
+            _ProfileDialogTile(
+              icon: 'assets/images/accounticon.png',
+              text: 'Account Information',
+              onTap: () {
+                showDialog(context: Get.context!, barrierColor: Colors.black54, builder: (context) => const AccountInfoDialog());
+              },
+            ),
             Divider(color: Color(0x339CA3AF), thickness: 1.h),
-            _ProfileDialogTile(icon: 'assets/images/transaction.png', text: 'Transaction History', onTap: () {}),
+            _ProfileDialogTile(
+              icon: 'assets/images/transaction.png',
+              text: 'Transaction History',
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) => const CalendarTransactionHistoryScreen()));
+              },
+            ),
             Divider(color: Color(0x339CA3AF), thickness: 1.h),
-            _ProfileDialogTile(icon: 'assets/images/Setting.png', text: 'App Settings', onTap: () {}),
+            _ProfileDialogTile(
+              icon: 'assets/images/Setting.png',
+              text: 'App Settings',
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) => const AppSettingsScreen()));
+              },
+            ),
             Divider(color: Color(0x339CA3AF), thickness: 1.h),
-            _ProfileDialogTile(icon: 'assets/images/helpandsupport.png', text: 'Help & Support', onTap: () {}),
+            _ProfileDialogTile(
+              icon: 'assets/images/helpandsupport.png',
+              text: 'Help & Support',
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) => const HelpSupportScreen()));
+              },
+            ),
             Divider(color: Color(0x339CA3AF), thickness: 1.h),
-            _ProfileDialogTile(icon: 'assets/images/customersupport.png', text: 'Contact Support', onTap: () {}),
+            _ProfileDialogTile(
+              icon: 'assets/images/customersupport.png',
+              text: 'Contact Support',
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) => const ContactSupportScreen()));
+              },
+            ),
             SizedBox(height: 22.h),
             SizedBox(
               width: double.infinity,
@@ -1689,4 +1698,763 @@ void showAssignToGoalDialog(BuildContext context) {
       );
     },
   );
+}
+
+class AccountInfoDialog extends StatefulWidget {
+  const AccountInfoDialog({Key? key}) : super(key: key);
+
+  @override
+  State<AccountInfoDialog> createState() => _AccountInfoDialogState();
+}
+
+class _AccountInfoDialogState extends State<AccountInfoDialog> {
+  int selectedTab = 0;
+  @override
+  Widget build(BuildContext context) {
+    final List<String> tabs = ['Account', 'Bank Accounts', 'Subscription'];
+    return Dialog(
+      backgroundColor: Colors.transparent,
+      insetPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+      child: Container(
+        width: 360,
+        decoration: BoxDecoration(color: const Color(0xFF1F2937), borderRadius: BorderRadius.circular(18)),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Tabs
+            Padding(
+              padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: List.generate(tabs.length, (i) {
+                  final isSelected = selectedTab == i;
+                  return GestureDetector(
+                    onTap: () => setState(() => selectedTab = i),
+                    child:
+                        isSelected
+                            ? ShaderMask(
+                              shaderCallback:
+                                  (rect) => const LinearGradient(
+                                    colors: [Color(0xFF008FED), Color(0xFF00D1E9)],
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                  ).createShader(rect),
+                              child: Text(
+                                tabs[i],
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white, // This will be masked by the gradient
+                                ),
+                              ),
+                            )
+                            : Text(tabs[i], style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white)),
+                  );
+                }),
+              ),
+            ),
+            const SizedBox(height: 10),
+            const Divider(color: Color(0x339CA3AF), thickness: 1),
+            // Tab content
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: Builder(
+                  builder: (context) {
+                    if (selectedTab == 0) {
+                      // Account Tab
+                      return SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Profile Photo Box
+                            Container(
+                              width: double.infinity,
+                              decoration: BoxDecoration(color: Color(0xFF020817), borderRadius: BorderRadius.circular(12)),
+                              padding: const EdgeInsets.all(16),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text('Profile Photo', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14)),
+                                  const SizedBox(height: 12),
+                                  Row(
+                                    children: [
+                                      const CircleAvatar(radius: 28, backgroundImage: AssetImage('assets/images/profile-avatar.png')),
+                                      const SizedBox(width: 16),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: const [
+                                            Text(
+                                              'PNG, JPG, GIF, WebP. Max 10MB. Min 100x100px. Optimized & cached.',
+                                              style: TextStyle(color: Color(0xFF9CA3AF), fontSize: 11),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 16),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: ElevatedButton.icon(
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: Colors.transparent,
+                                            shadowColor: Colors.transparent,
+                                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                            elevation: 0,
+                                            padding: EdgeInsets.zero,
+                                          ),
+                                          icon: const Icon(Icons.camera_alt, color: Colors.white, size: 18),
+                                          label: Ink(
+                                            decoration: const BoxDecoration(
+                                              gradient: LinearGradient(
+                                                colors: [Color(0xFF008FED), Color(0xFF00D1E9)],
+                                                begin: Alignment.topLeft,
+                                                end: Alignment.bottomRight,
+                                              ),
+                                              borderRadius: BorderRadius.all(Radius.circular(8)),
+                                            ),
+                                            child: Container(
+                                              alignment: Alignment.center,
+                                              padding: EdgeInsets.symmetric(vertical: 10),
+                                              child: const Text(
+                                                'Choose File',
+                                                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13),
+                                              ),
+                                            ),
+                                          ),
+                                          onPressed: () {},
+                                        ),
+                                      ),
+                                      const SizedBox(width: 12),
+                                      Expanded(
+                                        child: ElevatedButton.icon(
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: Colors.transparent,
+                                            shadowColor: Colors.transparent,
+                                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                            elevation: 0,
+                                            padding: EdgeInsets.zero,
+                                          ),
+                                          icon: const Icon(Icons.photo_camera_front, color: Colors.white, size: 18),
+                                          label: Ink(
+                                            decoration: const BoxDecoration(
+                                              gradient: LinearGradient(
+                                                colors: [Color(0xFF008FED), Color(0xFF00D1E9)],
+                                                begin: Alignment.topLeft,
+                                                end: Alignment.bottomRight,
+                                              ),
+                                              borderRadius: BorderRadius.all(Radius.circular(8)),
+                                            ),
+                                            child: Container(
+                                              alignment: Alignment.center,
+                                              padding: EdgeInsets.symmetric(vertical: 10),
+                                              child: const Text(
+                                                'Take Your Photo',
+                                                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13),
+                                              ),
+                                            ),
+                                          ),
+                                          onPressed: () {},
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(height: 18),
+                            // Profile Information Box
+                            Container(
+                              width: double.infinity,
+                              decoration: BoxDecoration(color: Color(0xFF020817), borderRadius: BorderRadius.circular(12)),
+                              padding: const EdgeInsets.all(16),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text('Profile Information', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14)),
+                                  const SizedBox(height: 12),
+                                  const Text('Full Name', style: TextStyle(color: Color(0xFF9CA3AF), fontSize: 12)),
+                                  const SizedBox(height: 6),
+                                  TextFormField(
+                                    initialValue: 'Testing',
+                                    style: const TextStyle(color: Colors.white, fontSize: 13),
+                                    decoration: InputDecoration(
+                                      filled: true,
+                                      fillColor: Color(0xFF1F2937),
+                                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide.none),
+                                      hintText: 'Testing',
+                                      hintStyle: TextStyle(color: Color(0xFF9CA3AF)),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 12),
+                                  const Text('Email Address', style: TextStyle(color: Color(0xFF9CA3AF), fontSize: 12)),
+                                  const SizedBox(height: 6),
+                                  TextFormField(
+                                    initialValue: 'jane.doe@example.com',
+                                    style: const TextStyle(color: Colors.white, fontSize: 13),
+                                    decoration: InputDecoration(
+                                      filled: true,
+                                      fillColor: Color(0xFF1F2937),
+                                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide.none),
+                                      hintText: 'jane.doe@example.com',
+                                      hintStyle: TextStyle(color: Color(0xFF9CA3AF)),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 16),
+                                  SizedBox(
+                                    width: double.infinity,
+                                    height: 40,
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.transparent,
+                                        shadowColor: Colors.transparent,
+                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                        elevation: 0,
+                                        padding: EdgeInsets.zero,
+                                      ),
+                                      onPressed: () {},
+                                      child: Ink(
+                                        decoration: const BoxDecoration(
+                                          gradient: LinearGradient(
+                                            colors: [Color(0xFF008FED), Color(0xFF00D1E9)],
+                                            begin: Alignment.topLeft,
+                                            end: Alignment.bottomRight,
+                                          ),
+                                          borderRadius: BorderRadius.all(Radius.circular(8)),
+                                        ),
+                                        child: Container(
+                                          alignment: Alignment.center,
+                                          height: 40,
+                                          child: const Text(
+                                            'Update Profile',
+                                            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(height: 18),
+                            // Security Box
+                            Container(
+                              width: double.infinity,
+                              decoration: BoxDecoration(color: Color(0xFF020817), borderRadius: BorderRadius.circular(12)),
+                              padding: const EdgeInsets.all(16),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text('Security', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14)),
+                                  const SizedBox(height: 12),
+                                  const Text('Current Password', style: TextStyle(color: Color(0xFF9CA3AF), fontSize: 12)),
+                                  const SizedBox(height: 6),
+                                  TextFormField(
+                                    obscureText: true,
+                                    style: const TextStyle(color: Colors.white, fontSize: 13),
+                                    decoration: InputDecoration(
+                                      filled: true,
+                                      fillColor: Color(0xFF1F2937),
+                                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide.none),
+                                      hintText: '*****',
+                                      hintStyle: TextStyle(color: Color(0xFF9CA3AF)),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 12),
+                                  const Text('New Password', style: TextStyle(color: Color(0xFF9CA3AF), fontSize: 12)),
+                                  const SizedBox(height: 6),
+                                  TextFormField(
+                                    obscureText: true,
+                                    style: const TextStyle(color: Colors.white, fontSize: 13),
+                                    decoration: InputDecoration(
+                                      filled: true,
+                                      fillColor: Color(0xFF1F2937),
+                                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide.none),
+                                      hintText: '*****',
+                                      hintStyle: TextStyle(color: Color(0xFF9CA3AF)),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 12),
+                                  const Text('Confirm New Password', style: TextStyle(color: Color(0xFF9CA3AF), fontSize: 12)),
+                                  const SizedBox(height: 6),
+                                  TextFormField(
+                                    obscureText: true,
+                                    style: const TextStyle(color: Colors.white, fontSize: 13),
+                                    decoration: InputDecoration(
+                                      filled: true,
+                                      fillColor: Color(0xFF1F2937),
+                                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide.none),
+                                      hintText: '*****',
+                                      hintStyle: TextStyle(color: Color(0xFF9CA3AF)),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 16),
+                                  SizedBox(
+                                    width: double.infinity,
+                                    height: 40,
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.transparent,
+                                        shadowColor: Colors.transparent,
+                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                        elevation: 0,
+                                        padding: EdgeInsets.zero,
+                                      ),
+                                      onPressed: () {},
+                                      child: Ink(
+                                        decoration: const BoxDecoration(
+                                          gradient: LinearGradient(
+                                            colors: [Color(0xFF008FED), Color(0xFF00D1E9)],
+                                            begin: Alignment.topLeft,
+                                            end: Alignment.bottomRight,
+                                          ),
+                                          borderRadius: BorderRadius.all(Radius.circular(8)),
+                                        ),
+                                        child: Container(
+                                          alignment: Alignment.center,
+                                          height: 40,
+                                          child: const Text(
+                                            'Change Password',
+                                            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(height: 18),
+                            // Preferences Box
+                            Container(
+                              width: double.infinity,
+                              decoration: BoxDecoration(color: Color(0xFF020817), borderRadius: BorderRadius.circular(12)),
+                              padding: const EdgeInsets.all(16),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text('Preferences', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14)),
+                                  const SizedBox(height: 12),
+                                  const Text('Timezone', style: TextStyle(color: Color(0xFF9CA3AF), fontSize: 12)),
+                                  const SizedBox(height: 6),
+                                  Container(
+                                    decoration: BoxDecoration(color: Color(0xFF1F2937), borderRadius: BorderRadius.circular(8)),
+                                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                    child: Row(
+                                      children: const [
+                                        Icon(Icons.access_time, color: Color(0xFF9CA3AF), size: 18),
+                                        SizedBox(width: 8),
+                                        Expanded(child: Text('Central Time (CT)', style: TextStyle(color: Colors.white, fontSize: 13))),
+                                        Icon(Icons.keyboard_arrow_down_rounded, color: Color(0xFF9CA3AF), size: 20),
+                                      ],
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  const Text(
+                                    'Used for displaying dates and times throughout the app.',
+                                    style: TextStyle(color: Color(0xFF9CA3AF), fontSize: 11),
+                                  ),
+                                  const SizedBox(height: 14),
+                                  const Text('Currency', style: TextStyle(color: Color(0xFF9CA3AF), fontSize: 12)),
+                                  const SizedBox(height: 6),
+                                  Container(
+                                    decoration: BoxDecoration(color: Color(0xFF1F2937), borderRadius: BorderRadius.circular(8)),
+                                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                    child: Row(
+                                      children: const [
+                                        Icon(Icons.attach_money, color: Color(0xFF9CA3AF), size: 18),
+                                        SizedBox(width: 8),
+                                        Expanded(child: Text('Central Time (CT)', style: TextStyle(color: Colors.white, fontSize: 13))),
+                                        Icon(Icons.keyboard_arrow_down_rounded, color: Color(0xFF9CA3AF), size: 20),
+                                      ],
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  const Text(
+                                    'Used for displaying dates and times throughout the app.',
+                                    style: TextStyle(color: Color(0xFF9CA3AF), fontSize: 11),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    } else if (selectedTab == 1) {
+                      // Bank Accounts Tab
+                      return SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              width: double.infinity,
+                              decoration: BoxDecoration(color: Color(0xFF020817), borderRadius: BorderRadius.circular(12)),
+                              padding: const EdgeInsets.all(16),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    'Connected Bank Accounts',
+                                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15),
+                                  ),
+                                  const SizedBox(height: 16),
+                                  // List of bank accounts
+                                  ...List.generate(
+                                    3,
+                                    (index) => Padding(
+                                      padding: const EdgeInsets.only(bottom: 16),
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: Color(0xFF020817),
+                                          borderRadius: BorderRadius.circular(10),
+                                          border: Border.all(color: Colors.white.withOpacity(0.5), width: 1),
+                                        ),
+                                        padding: const EdgeInsets.all(14),
+                                        child: Row(
+                                          children: [
+                                            ClipRRect(
+                                              borderRadius: BorderRadius.circular(20),
+                                              child: Image.asset('assets/images/chase.png', width: 40, height: 40, fit: BoxFit.cover),
+                                            ),
+                                            const SizedBox(width: 16),
+                                            Expanded(
+                                              child: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: const [
+                                                  Text(
+                                                    'Chase Bank',
+                                                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14),
+                                                  ),
+                                                  SizedBox(height: 4),
+                                                  Text('Connected on Jan 15, 2023', style: TextStyle(color: Color(0xFF9CA3AF), fontSize: 12)),
+                                                ],
+                                              ),
+                                            ),
+                                            ElevatedButton(
+                                              style: ElevatedButton.styleFrom(
+                                                backgroundColor: Color(0xFF020817),
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius: BorderRadius.circular(8),
+                                                  side: BorderSide(color: Colors.white.withOpacity(0.5), width: 1), // white 10% opacity),
+                                                ),
+                                                elevation: 0,
+
+                                                padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
+                                              ),
+                                              onPressed: () {},
+                                              child: const Text(
+                                                'Manage',
+                                                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  SizedBox(
+                                    width: double.infinity,
+                                    height: 40,
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.transparent,
+                                        shadowColor: Colors.transparent,
+                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                        elevation: 0,
+                                        padding: EdgeInsets.zero,
+                                      ),
+                                      onPressed: () {},
+                                      child: Ink(
+                                        decoration: const BoxDecoration(
+                                          gradient: LinearGradient(
+                                            colors: [Color(0xFF008FED), Color(0xFF00D1E9)],
+                                            begin: Alignment.topLeft,
+                                            end: Alignment.bottomRight,
+                                          ),
+                                          borderRadius: BorderRadius.all(Radius.circular(8)),
+                                        ),
+                                        child: Container(
+                                          alignment: Alignment.center,
+                                          height: 40,
+                                          child: const Text(
+                                            'Connect New Bank Account',
+                                            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    } else {
+                      // Subscription Tab
+                      return SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              width: double.infinity,
+                              decoration: BoxDecoration(color: Color(0xFF020817), borderRadius: BorderRadius.circular(12)),
+                              padding: const EdgeInsets.all(20),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text('Your Subscription', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
+                                  const SizedBox(height: 18),
+                                  Row(
+                                    children: [
+                                      Container(
+                                        decoration: BoxDecoration(color: Color(0xFF1F2937), borderRadius: BorderRadius.circular(8)),
+                                        padding: const EdgeInsets.all(10),
+                                        child: Icon(Icons.account_balance_wallet_rounded, color: Color(0xFF008FED), size: 32),
+                                      ),
+                                      const SizedBox(width: 14),
+                                      Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: const [
+                                          Text('BudgetFlow Pro', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15)),
+                                          SizedBox(height: 2),
+                                          Text('Active', style: TextStyle(color: Color(0xFF00D1E9), fontWeight: FontWeight.bold, fontSize: 13)),
+                                          SizedBox(height: 6),
+                                          Text('\$14.99 Billed Annually', style: TextStyle(color: Color(0xFF9CA3AF), fontSize: 12)),
+                                          Text('Renews on 1/14/2024', style: TextStyle(color: Color(0xFF9CA3AF), fontSize: 12)),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 18),
+                                  Container(
+                                    width: double.infinity,
+                                    decoration: BoxDecoration(
+                                      color: Color(0xFF1A3B2A),
+                                      borderRadius: BorderRadius.circular(8),
+                                      border: Border.all(color: Color(0xFF22C55E), width: 1),
+                                    ),
+                                    padding: const EdgeInsets.all(12),
+                                    child: const Text(
+                                      "Lifetime Discount Applied: You're saving \$230/year with your exclusive rate!",
+                                      style: TextStyle(color: Color(0xFF22C55E), fontSize: 13, fontWeight: FontWeight.w500),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 18),
+                                  const Text(
+                                    'Pro Benefits Included',
+                                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15),
+                                  ),
+                                  const SizedBox(height: 14),
+                                  ...['Transaction history', 'Savings Goals', 'Budget Categories', 'Budget Calendar', '1 Free Bank Connection'].map(
+                                    (benefit) => Padding(
+                                      padding: const EdgeInsets.only(bottom: 10),
+                                      child: Row(
+                                        children: [
+                                          const Icon(Icons.check_circle, color: Color(0xFF22C55E), size: 20),
+                                          const SizedBox(width: 10),
+                                          Expanded(child: Text(benefit, style: const TextStyle(color: Colors.white, fontSize: 14))),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 18),
+                                  SizedBox(
+                                    width: double.infinity,
+                                    height: 40,
+                                    child: OutlinedButton(
+                                      style: OutlinedButton.styleFrom(
+                                        side: BorderSide(color: Color(0xFF374151)),
+                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                      ),
+                                      onPressed: () {},
+                                      child: const Text(
+                                        'Billing History',
+                                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Center(
+                                    child: TextButton(
+                                      onPressed: () {},
+                                      child: const Text(
+                                        'Cancel subscription',
+                                        style: TextStyle(color: Color(0xFF9CA3AF), fontWeight: FontWeight.bold, fontSize: 13),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+                  },
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _BubbleMenu extends StatelessWidget {
+  final VoidCallback onConnectBank;
+  final VoidCallback onAddCategory;
+  final VoidCallback onAddTransaction;
+  final VoidCallback onAddGoal;
+  const _BubbleMenu({required this.onConnectBank, required this.onAddCategory, required this.onAddTransaction, required this.onAddGoal});
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.transparent,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 0),
+            decoration: BoxDecoration(
+              color: const Color(0xFF111827),
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 12)],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _BubbleMenuItem(icon: Icons.account_balance, text: 'Connect Bank', onTap: onConnectBank),
+                _BubbleMenuItem(icon: Icons.category, text: 'Add Expense Category', onTap: onAddCategory),
+                _BubbleMenuItem(icon: Icons.attach_money, text: 'Add Transaction', onTap: onAddTransaction),
+                _BubbleMenuItem(icon: Icons.track_changes, text: 'Add Goal', onTap: onAddGoal),
+              ],
+            ),
+          ),
+          // Pointer
+          CustomPaint(size: const Size(24, 12), painter: _BubblePointerPainter()),
+        ],
+      ),
+    );
+  }
+}
+
+class _BubbleMenuItem extends StatelessWidget {
+  final IconData icon;
+  final String text;
+  final VoidCallback onTap;
+  const _BubbleMenuItem({required this.icon, required this.text, required this.onTap});
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+        child: Row(
+          children: [
+            Icon(icon, color: Colors.white, size: 22),
+            const SizedBox(width: 16),
+            Text(text, style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w500)),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _BubblePointerPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()..color = const Color(0xFF111827);
+    final path = Path();
+    path.moveTo(0, 0);
+    path.lineTo(size.width / 2, size.height);
+    path.lineTo(size.width, 0);
+    path.close();
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}
+
+class _FabWithBubbleMenu extends StatefulWidget {
+  @override
+  State<_FabWithBubbleMenu> createState() => _FabWithBubbleMenuState();
+}
+
+class _FabWithBubbleMenuState extends State<_FabWithBubbleMenu> {
+  bool showMenu = false;
+  OverlayEntry? _overlayEntry;
+
+  void _toggleMenu() {
+    if (showMenu) {
+      _overlayEntry?.remove();
+      _overlayEntry = null;
+      setState(() => showMenu = false);
+    } else {
+      final overlay = Overlay.of(context);
+      final renderBox = context.findRenderObject() as RenderBox;
+      final position = renderBox.localToGlobal(Offset.zero);
+      final screenWidth = MediaQuery.of(context).size.width;
+      final menuWidth = 280.0;
+      _overlayEntry = OverlayEntry(
+        builder:
+            (context) => Positioned(
+              left: (screenWidth - menuWidth) / 2,
+              // Reduce the offset so the menu is just above the button
+              bottom: MediaQuery.of(context).size.height - position.dy + 20,
+              width: menuWidth,
+              child: _BubbleMenu(
+                onConnectBank: () {
+                  _toggleMenu();
+                  // TODO: Implement Connect Bank
+                },
+                onAddCategory: () {
+                  _toggleMenu();
+                  // TODO: Implement Add Expense Category
+                },
+                onAddTransaction: () {
+                  _toggleMenu();
+                  // TODO: Implement Add Transaction
+                },
+                onAddGoal: () {
+                  _toggleMenu();
+                  // TODO: Implement Add Goal
+                },
+              ),
+            ),
+      );
+      overlay.insert(_overlayEntry!);
+      setState(() => showMenu = true);
+    }
+  }
+
+  @override
+  void dispose() {
+    _overlayEntry?.remove();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: _toggleMenu,
+      child: Container(
+        width: 64,
+        height: 64,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          gradient: LinearGradient(colors: [Color(0xFF008FED), Color(0xFF00D1E9)]),
+          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.15), blurRadius: 8, offset: Offset(0, 4))],
+        ),
+        child: const Icon(Icons.add, color: Colors.white, size: 36),
+      ),
+    );
+  }
 }
