@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:rivr_project/rivrBudgetFlow/view/create_pass_screen.dart';
+import '../../../controller/navigation_controller.dart';
 
 class ForgotPassOtpScreen extends StatefulWidget {
   const ForgotPassOtpScreen({Key? key}) : super(key: key);
@@ -202,7 +202,8 @@ class _ForgotPassOtpScreenState extends State<ForgotPassOtpScreen> {
                       ),
                     ),
                     onPressed: () {
-                      Get.to(() => const CreatePassScreen());
+                      final navigationController = Get.find<NavigationController>();
+                      navigationController.navigateToCreatePassword();
                     },
                     child: const Text(
                       'Continue',

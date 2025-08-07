@@ -14,6 +14,7 @@ class CategoryModel {
 class HomeController extends GetxController {
   var selectedIndex = 0.obs;
   var homeTabIndex = 0.obs;
+  var activityInitialTab = 0.obs;
 
   // User info and messages
   final userName = 'Jane'.obs;
@@ -21,7 +22,7 @@ class HomeController extends GetxController {
   final budgetTitle = 'June Budget So Far'.obs;
 
   // Budget summary
-  final moneyIn = 2500.0.obs;
+  final moneyIn = 25.00.obs;
   final moneyOut = 85.42.obs;
 
   final categories =
@@ -55,4 +56,5 @@ class HomeController extends GetxController {
   void selectTab(int index) => selectedIndex.value = index;
   void onNavTap(int index) => selectedIndex.value = index;
   void selectHomeTab(int index) => homeTabIndex.value = index;
+  void setActivityInitialTab(int index) => activityInitialTab.value = index;
 }

@@ -4,12 +4,26 @@ import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'dart:io';
 import 'rivrBudgetFlow/view/rivr_splash_screen.dart';
+import 'rivrBudgetFlow/view/rivr_pre_login.dart';
+import 'rivrBudgetFlow/view/rivr_login_screen.dart';
+import 'rivrBudgetFlow/view/rivr_create_account_screen.dart';
+import 'rivrBudgetFlow/view/forgot_pass_screen.dart';
+import 'rivrBudgetFlow/view/forgot_pass_otp_screen.dart';
+import 'rivrBudgetFlow/view/create_pass_screen.dart';
+import 'rivrBudgetFlow/view/rivr_subscription_screen.dart';
+import 'rivrBudgetFlow/view/onboarding_quiz1_screen.dart';
+import 'rivrBudgetFlow/view/dashboard/home_screen.dart';
+import 'controller/navigation_controller.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitDown, DeviceOrientation.portraitUp]);
   HttpOverrides.global = MyHttpOverrides();
+  
+  // Initialize navigation controller
+  Get.put(NavigationController());
+  
   runApp(RivrBudgetFlow());
 }
 
@@ -30,7 +44,19 @@ class RivrBudgetFlow extends StatelessWidget {
             theme: ThemeData(scaffoldBackgroundColor: const Color(0xFF1F2937), fontFamily: 'Inter'),
             debugShowCheckedModeBanner: false,
             useInheritedMediaQuery: true,
-            home: RivrSplashScreen(),
+            initialRoute: '/',
+            getPages: [
+              GetPage(name: '/', page: () => RivrSplashScreen()),
+              GetPage(name: '/pre-login', page: () => const RivrPreLoginScreen()),
+              GetPage(name: '/login', page: () => const RivrLoginScreen()),
+              GetPage(name: '/signup', page: () => const RivrCreateAccountScreen()),
+              GetPage(name: '/forgot-password', page: () => const ForgotPassScreen()),
+              GetPage(name: '/forgot-password-otp', page: () => const ForgotPassOtpScreen()),
+              GetPage(name: '/create-password', page: () => const CreatePassScreen()),
+              GetPage(name: '/subscription', page: () => const RivrSubscriptionScreen()),
+              GetPage(name: '/onboarding', page: () => const OnboardingQuiz1Screen()),
+              GetPage(name: '/home', page: () => const HomeScreen()),
+            ],
           ),
         );
       },

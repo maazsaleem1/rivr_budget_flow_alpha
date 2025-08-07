@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
+import '../../../controller/navigation_controller.dart';
 
 class CreatePassScreen extends StatefulWidget {
   const CreatePassScreen({Key? key}) : super(key: key);
@@ -140,6 +142,12 @@ class _CreatePassScreenState extends State<CreatePassScreen> {
                           );
                         },
                       );
+                      
+                      // Navigate to home after showing dialog
+                      Future.delayed(const Duration(seconds: 3), () {
+                        final navigationController = Get.find<NavigationController>();
+                        navigationController.handleSuccessfulPasswordReset();
+                      });
                     },
                     child: const Text('Continue', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18)),
                   ),

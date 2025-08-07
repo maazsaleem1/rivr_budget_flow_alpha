@@ -1,21 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'home_screen.dart' show showEditTransactionDialog;
+import '../../../controller/home_controller.dart';
 
 class ActivityScreen extends StatefulWidget {
-  const ActivityScreen({super.key});
+  final int initialSelectedTab;
+  
+  const ActivityScreen({super.key, this.initialSelectedTab = 0});
 
   @override
   State<ActivityScreen> createState() => _ActivityScreenState();
 }
 
 class _ActivityScreenState extends State<ActivityScreen> {
-  int selectedTab = 0;
+  late int selectedTab;
   String sortOption = 'Newest First';
   final List<String> sortOptions = ['Newest First', 'Oldest First', 'Amount (High-Low)', 'Amount (Low-High)'];
   final GlobalKey _sortKey = GlobalKey();
   final GlobalKey _filterKey = GlobalKey();
   OverlayEntry? _filterOverlay;
+  final HomeController controller = Get.find<HomeController>();
+
+  @override
+  void initState() {
+    super.initState();
+    // Use the controller's activityInitialTab if available, otherwise use widget parameter
+    selectedTab = controller.activityInitialTab.value != 0 ? controller.activityInitialTab.value : widget.initialSelectedTab;
+    
+    // Listen to changes in activityInitialTab
+    ever(controller.activityInitialTab, (int tabIndex) {
+      if (mounted) {
+        setState(() {
+          selectedTab = tabIndex;
+        });
+      }
+    });
+  }
 
   void _showSortMenu(BuildContext context) async {
     final RenderBox box = _sortKey.currentContext!.findRenderObject() as RenderBox;

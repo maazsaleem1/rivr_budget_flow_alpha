@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+
 import 'package:rivr_project/rivrBudgetFlow/view/dashboard/calendar_transaction_history_screen.dart';
 import 'package:rivr_project/rivrBudgetFlow/view/dashboard/help_and_support_screen.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -47,7 +48,7 @@ class HomeScreen extends StatelessWidget {
         case 2:
           return const GoalsScreen();
         case 3:
-          return const ActivityScreen();
+          return const ActivityScreen(initialSelectedTab: 0);
         default:
           return _HomeContent();
       }
@@ -67,7 +68,49 @@ class HomeScreen extends StatelessWidget {
 }
 
 // Extracted the original home content to a separate widget for clarity
-class _HomeContent extends StatelessWidget {
+class _HomeContent extends StatefulWidget {
+  @override
+  State<_HomeContent> createState() => _HomeContentState();
+}
+
+class _HomeContentState extends State<_HomeContent> with SingleTickerProviderStateMixin {
+  late AnimationController _animationController;
+  late Animation<double> _heightAnimation;
+  bool _isGettingStartedExpanded = false;
+  bool _showSwipeToDismissContainer = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      duration: Duration(milliseconds: 300),
+      vsync: this,
+    );
+    _heightAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeInOut,
+    ));
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  void _toggleGettingStarted() {
+    setState(() {
+      _isGettingStartedExpanded = !_isGettingStartedExpanded;
+      if (_isGettingStartedExpanded) {
+        _animationController.forward();
+      } else {
+        _animationController.reverse();
+      }
+    });
+  }
   @override
   Widget build(BuildContext context) {
     final HomeController controller = Get.find<HomeController>();
@@ -120,79 +163,95 @@ class _HomeContent extends StatelessWidget {
             child: Row(
               children: [
                 Expanded(
-                  child: Container(
-                    padding: const EdgeInsets.all(15),
-                    decoration: BoxDecoration(color: const Color(0xFF1F2937), borderRadius: BorderRadius.circular(16)),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Row(
-                          children: [
-                            SizedBox(height: 50, width: 50, child: Image.asset('assets/images/money_in.png')),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const InterText(
+                  child: GestureDetector(
+                    onTap: () {
+                      // Navigate to activity screen with Income tab selected (index 2)
+                      controller.onNavTap(3); // Switch to Activity tab
+                      // Set the initial tab for the activity screen
+                      controller.setActivityInitialTab(2); // Income tab
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(color: const Color(0xFF1F2937), borderRadius: BorderRadius.circular(16)),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Row(
+                            children: [
+                              SizedBox(height: 40, width: 40, child: Image.asset('assets/images/money_in.png')),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                                                      const InterText(
                                     'Money In',
-                                    style: TextStyle(color: Colors.white70, fontSize: 18),
+                                    style: TextStyle(color: Colors.white70, fontSize: 14),
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                   Obx(
                                     () => InterText(
                                       '\$4${controller.moneyIn.value.toStringAsFixed(2)}',
-                                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
+                                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
-                                ],
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ],
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
                 SizedBox(width: cardSpacing),
                 Expanded(
-                  child: Container(
-                    padding: const EdgeInsets.all(15),
-                    decoration: BoxDecoration(color: const Color(0xFF1F2937), borderRadius: BorderRadius.circular(16)),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Row(
-                          children: [
-                            SizedBox(height: 50, width: 50, child: Image.asset('assets/images/money_out.png')),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const InterText(
+                  child: GestureDetector(
+                    onTap: () {
+                      // Navigate to activity screen with Expenses tab selected (index 1)
+                      controller.onNavTap(3); // Switch to Activity tab
+                      // Set the initial tab for the activity screen
+                      controller.setActivityInitialTab(1); // Expenses tab
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(color: const Color(0xFF1F2937), borderRadius: BorderRadius.circular(16)),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Row(
+                            children: [
+                              SizedBox(height: 40, width: 40, child: Image.asset('assets/images/money_out.png')),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                                                      const InterText(
                                     'Money Out',
-                                    style: TextStyle(color: Colors.white70, fontSize: 18),
+                                    style: TextStyle(color: Colors.white70, fontSize: 14),
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                   Obx(
                                     () => InterText(
                                       '\$4${controller.moneyOut.value.toStringAsFixed(2)}',
-                                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
+                                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
-                                ],
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ],
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -203,34 +262,41 @@ class _HomeContent extends StatelessWidget {
           // Alert card
           Padding(
             padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
-            child: Container(
-              width: double.infinity,
-              padding: EdgeInsets.only(top: alertCardPadding * 1.5, bottom: alertCardPadding * 3, left: alertCardPadding, right: alertCardPadding),
-              decoration: BoxDecoration(
-                image: const DecorationImage(image: AssetImage('assets/images/upcoming_bills.png'), fit: BoxFit.cover),
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  InterText(
-                    'You can get back track. Don\'t give up.',
-                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14 * scale),
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(height: 4 * scale),
-                  InterText(
-                    '-\$2,414.58',
-                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 32 * scale),
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(height: 2 * scale),
-                  InterText(
-                    'Minus Pending and Future Transactions',
-                    style: TextStyle(color: Colors.white70, fontSize: 14 * scale),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
+            child: GestureDetector(
+              onTap: () {
+                // Navigate to activity screen with All Transactions tab selected (index 0)
+                controller.onNavTap(3); // Switch to Activity tab
+                controller.setActivityInitialTab(0); // All Transactions tab
+              },
+              child: Container(
+                width: double.infinity,
+                padding: EdgeInsets.only(top: alertCardPadding * 1.5, bottom: alertCardPadding * 3, left: alertCardPadding, right: alertCardPadding),
+                decoration: BoxDecoration(
+                  image: const DecorationImage(image: AssetImage('assets/images/upcoming_bills.png'), fit: BoxFit.cover),
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    InterText(
+                      'You can get back track. Don\'t give up.',
+                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14 * scale),
+                      textAlign: TextAlign.center,
+                    ),
+                    SizedBox(height: 4 * scale),
+                    InterText(
+                      '-\$2,414.58',
+                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 32 * scale),
+                      textAlign: TextAlign.center,
+                    ),
+                    SizedBox(height: 2 * scale),
+                    InterText(
+                      'Minus Pending and Future Transactions',
+                      style: TextStyle(color: Colors.white70, fontSize: 14 * scale),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -269,18 +335,18 @@ class _HomeContent extends StatelessWidget {
                   SizedBox(height: sectionSpacing * 0.6),
                   // Custom circular chart
                   SizedBox(
-                    height: chartSize,
-                    width: chartSize,
+                    height: chartSize * 1.3, // Increased size by 30%
+                    width: chartSize * 1.3, // Increased size by 30%
                     child: Stack(
                       alignment: Alignment.center,
                       children: [
-                        CustomPaint(size: const Size(160, 160), painter: _SpendingChartPainter()),
+                        CustomPaint(size: Size(chartSize * 1.3, chartSize * 1.3), painter: _SpendingChartPainter()),
                         Column(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
-                            Text('Surplus', style: TextStyle(color: Color(0xFF4ADE80), fontWeight: FontWeight.bold, fontSize: 16)),
+                          children:  [
+                            Text('Surplus', style: TextStyle(color: Color(0xFF4ADE80), fontWeight: FontWeight.bold, fontSize: 18)),
                             SizedBox(height: 4),
-                            Text('￠2,414.58', style: TextStyle(color: Color(0xFF4ADE80), fontWeight: FontWeight.bold, fontSize: 22)),
+                            Text('\$ 2,414.58', style: TextStyle(color: Color(0xFF4ADE80), fontWeight: FontWeight.bold, fontSize: 24)),
                           ],
                         ),
                       ],
@@ -319,42 +385,55 @@ class _HomeContent extends StatelessWidget {
           ),
           SizedBox(height: sectionSpacing),
           // White info box: Getting Started
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
-            child: Container(
-              width: double.infinity,
-              padding: EdgeInsets.symmetric(vertical: 24.w, horizontal: 20.w),
-              decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16)),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  InterText(
-                    "Let's get you started with Rivr BudgetFlow",
-                    style: TextStyle(color: const Color(0xFF020817), fontWeight: FontWeight.bold, fontSize: 18.sp),
-                  ),
-                  SizedBox(height: 8.h),
-                  InterText('Follow the easy steps below to set up your budget', style: TextStyle(color: const Color(0xFF6B7280), fontSize: 14.sp)),
-                  SizedBox(height: 16.h),
-                  Row(
+          if (_showSwipeToDismissContainer)
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+              child: GestureDetector(
+                onHorizontalDragEnd: (DragEndDetails details) {
+                  // Check if the drag distance is sufficient to dismiss
+                  if (details.primaryVelocity != null && 
+                      (details.primaryVelocity! > 300 || details.primaryVelocity! < -300)) {
+                    setState(() {
+                      _showSwipeToDismissContainer = false;
+                    });
+                  }
+                },
+                child: Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.symmetric(vertical: 24.w, horizontal: 20.w),
+                  decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16)),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Image.asset(
-                        'assets/images/exclamationicon.png', // Make sure this asset exists
-                        height: 20.w,
-                        width: 20.w,
+                      InterText(
+                        "Let's get you started with Rivr BudgetFlow",
+                        style: TextStyle(color: const Color(0xFF020817), fontWeight: FontWeight.bold, fontSize: 18.sp),
                       ),
-                      SizedBox(width: 8.w),
-                      InterText('Swipe to dismiss', style: TextStyle(color: const Color(0xFF020817), fontSize: 13.sp, fontWeight: FontWeight.w500)),
+                      SizedBox(height: 8.h),
+                      InterText('Follow the easy steps below to set up your budget', style: TextStyle(color: const Color(0xFF6B7280), fontSize: 14.sp)),
+                      SizedBox(height: 16.h),
+                      Row(
+                        children: [
+                          Image.asset(
+                            'assets/images/exclamationicon.png', // Make sure this asset exists
+                            height: 20.w,
+                            width: 20.w,
+                          ),
+                          SizedBox(width: 8.w),
+                          InterText('Swipe to dismiss', style: TextStyle(color: const Color(0xFF020817), fontSize: 13.sp, fontWeight: FontWeight.w500)),
+                        ],
+                      ),
                     ],
                   ),
-                ],
+                ),
               ),
             ),
-          ),
           SizedBox(height: sectionSpacing * 0.7),
           // Gradient Getting Started box
           Padding(
             padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
-            child: Container(
+            child: AnimatedContainer(
+              duration: Duration(milliseconds: 300),
               width: double.infinity,
               padding: EdgeInsets.symmetric(vertical: 20.w, horizontal: 16.w),
               decoration: BoxDecoration(
@@ -367,48 +446,106 @@ class _HomeContent extends StatelessWidget {
                     children: [
                       InterText('Getting Started', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16.sp)),
                       const Spacer(),
-                      Container(
-                        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 6.h),
-                        decoration: BoxDecoration(border: Border.all(color: Colors.white, width: 1.5), borderRadius: BorderRadius.circular(20)),
-                        child: InterText('Done', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14.sp)),
+                      GestureDetector(
+                        onTap: _toggleGettingStarted,
+                        child: Container(
+                          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 6.h),
+                          decoration: BoxDecoration(border: Border.all(color: Colors.white, width: 1.5), borderRadius: BorderRadius.circular(20)),
+                          child: InterText(_isGettingStartedExpanded ? 'Collapse' : 'Done', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14.sp)),
+                        ),
                       ),
                     ],
                   ),
-                  SizedBox(height: 18.h),
-                  // Steps
-                  ...List.generate(5, (index) {
-                    final steps = [
-                      'Add income (money in)',
-                      'Add expenses (money out)',
-                      'Set your budget limits',
-                      'Connect your bank account',
-                      'Review and finish',
-                    ];
-                    return Padding(
-                      padding: EdgeInsets.only(bottom: index == 4 ? 0 : 12.h),
-                      child: Row(
-                        children: [
-                          Container(
-                            width: 32.w,
-                            height: 32.w,
-                            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16)),
-                            child: Center(
-                              child: InterText(
-                                '${index + 1}',
-                                style: TextStyle(color: const Color(0xFF008FED), fontWeight: FontWeight.bold, fontSize: 16.sp),
+                  AnimatedSize(
+                    duration: Duration(milliseconds: 300),
+                    child: _isGettingStartedExpanded
+                        ? Column(
+                            children: [
+                              SizedBox(height: 18.h),
+                              // Steps
+                              ...List.generate(5, (index) {
+                                final steps = [
+                                  'Add income (money in)',
+                                  'Add expenses (money out)',
+                                  'Set your budget limits',
+                                  'Connect your bank account',
+                                  'Review and finish',
+                                ];
+                                return Padding(
+                                  padding: EdgeInsets.only(bottom: index == 4 ? 0 : 12.h),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      if (index == 0) {
+                                        // Open the transaction dialog for adding income
+                                        showEditTransactionDialog(context, 20.w);
+                                      }
+                                      // For other steps, you can add more functionality here
+                                    },
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          width: 32.w,
+                                          height: 32.w,
+                                          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16)),
+                                          child: Center(
+                                            child: InterText(
+                                              '${index + 1}',
+                                              style: TextStyle(color: const Color(0xFF008FED), fontWeight: FontWeight.bold, fontSize: 16.sp),
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(width: 14.w),
+                                        Expanded(
+                                          child: InterText(steps[index], style: TextStyle(color: Colors.white, fontSize: 15.sp, fontWeight: FontWeight.w500)),
+                                        ),
+                                        SizedBox(width: 8.w),
+                                        Icon(Icons.chevron_right, color: Colors.white, size: 28.w),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              }),
+                              // Additional expanded content
+                              SizedBox(height: 20.h),
+                              Container(
+                                width: double.infinity,
+                                padding: EdgeInsets.all(16.w),
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withOpacity(0.1),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    InterText(
+                                      'Additional Tips:',
+                                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16.sp),
+                                    ),
+                                    SizedBox(height: 12.h),
+                                    _ExpandedTipItem(
+                                      icon: Icons.trending_up,
+                                      title: 'Track Your Progress',
+                                      description: 'Monitor your spending habits and savings goals regularly.',
+                                    ),
+                                    SizedBox(height: 8.h),
+                                    _ExpandedTipItem(
+                                      icon: Icons.notifications,
+                                      title: 'Set Reminders',
+                                      description: 'Get notified about upcoming bills and budget limits.',
+                                    ),
+                                    SizedBox(height: 8.h),
+                                    _ExpandedTipItem(
+                                      icon: Icons.analytics,
+                                      title: 'Review Reports',
+                                      description: 'Check monthly reports to understand your spending patterns.',
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                          ),
-                          SizedBox(width: 14.w),
-                          Expanded(
-                            child: InterText(steps[index], style: TextStyle(color: Colors.white, fontSize: 15.sp, fontWeight: FontWeight.w500)),
-                          ),
-                          SizedBox(width: 8.w),
-                          Icon(Icons.chevron_right, color: Colors.white, size: 28.w),
-                        ],
-                      ),
-                    );
-                  }),
+                            ],
+                          )
+                        : SizedBox.shrink(),
+                  ),
                 ],
               ),
             ),
@@ -934,7 +1071,7 @@ class _NavbarItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget iconWidget = Image.asset(isActive && selectedIcon != null ? selectedIcon! : icon, height: 44);
+    Widget iconWidget = Image.asset(isActive && selectedIcon != null ? selectedIcon! : icon, height: 38.w);
 
     return GestureDetector(onTap: onTap, behavior: HitTestBehavior.opaque, child: Column(mainAxisSize: MainAxisSize.min, children: [iconWidget]));
   }
@@ -2455,6 +2592,56 @@ class _FabWithBubbleMenuState extends State<_FabWithBubbleMenu> {
         ),
         child: const Icon(Icons.add, color: Colors.white, size: 36),
       ),
+    );
+  }
+}
+
+class _ExpandedTipItem extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final String description;
+
+  const _ExpandedTipItem({
+    required this.icon,
+    required this.title,
+    required this.description,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(
+          icon,
+          color: Colors.white,
+          size: 20.w,
+        ),
+        SizedBox(width: 12.w),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              InterText(
+                title,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 14.sp,
+                ),
+              ),
+              SizedBox(height: 4.h),
+              InterText(
+                description,
+                style: TextStyle(
+                  color: Colors.white.withOpacity(0.8),
+                  fontSize: 12.sp,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

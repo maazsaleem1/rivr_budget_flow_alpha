@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:rivr_project/rivrBudgetFlow/view/forgot_pass_screen.dart';
-import 'rivr_create_account_screen.dart';
-import 'rivr_subscription_screen.dart';
+import '../../../controller/navigation_controller.dart';
 import '../../widgets/inter_text.dart';
 
 class RivrLoginScreen extends StatefulWidget {
@@ -95,7 +93,8 @@ class _RivrLoginScreenState extends State<RivrLoginScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [GestureDetector(onTap: () {
-                          Get.to(() => const ForgotPassScreen());
+                          final navigationController = Get.find<NavigationController>();
+                          navigationController.navigateToForgotPassword();
                         }, child: Image.asset('assets/images/textGradientForgotPass.png', height: 22))],
                       ),
                       const SizedBox(height: 28),
@@ -113,7 +112,9 @@ class _RivrLoginScreenState extends State<RivrLoginScreen> {
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                             ),
                             onPressed: () {
-                              Get.to(() => const RivrSubscriptionScreen());
+                              // Navigate to subscription screen after successful login
+                              final navigationController = Get.find<NavigationController>();
+                              navigationController.handleSuccessfulAuth();
                             },
                             child: const Text('Sign in', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18)),
                           ),
@@ -130,7 +131,8 @@ class _RivrLoginScreenState extends State<RivrLoginScreen> {
                   const Text('Don\'t have an account? ', style: TextStyle(color: Colors.white70, fontSize: 15)),
                   GestureDetector(
                     onTap: () {
-                      Get.to(() => const RivrCreateAccountScreen());
+                      final navigationController = Get.find<NavigationController>();
+                      navigationController.navigateToSignUp();
                     },
                     child: const Text('Sign up', style: TextStyle(color: Color(0xFF00D1E9), fontWeight: FontWeight.bold, fontSize: 15)),
                   ),

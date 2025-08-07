@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:rivr_project/rivrBudgetFlow/view/forgot_pass_otp_screen.dart';
-import 'package:rivr_project/rivrBudgetFlow/view/rivr_subscription_screen.dart';
+import '../../../controller/navigation_controller.dart';
 
 class ForgotPassScreen extends StatelessWidget {
   const ForgotPassScreen({Key? key}) : super(key: key);
@@ -74,7 +73,8 @@ class ForgotPassScreen extends StatelessWidget {
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                             ),
                             onPressed: () {
-                              Get.to(() => const ForgotPassOtpScreen());
+                              final navigationController = Get.find<NavigationController>();
+                              navigationController.navigateToForgotPasswordOtp();
                             },
                             child: const Text('Send Reset Link', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18)),
                           ),

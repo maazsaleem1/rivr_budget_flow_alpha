@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'onboarding_quiz1_screen.dart';
+import 'package:get/get.dart';
+import '../../../controller/navigation_controller.dart';
 import '../../widgets/inter_text.dart';
 
 class RivrCreateAccountScreen extends StatefulWidget {
@@ -122,7 +123,9 @@ class _RivrCreateAccountScreenState extends State<RivrCreateAccountScreen> {
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                             ),
                             onPressed: () {
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => const OnboardingQuiz1Screen()));
+                              // Navigate to subscription screen after successful signup
+                              final navigationController = Get.find<NavigationController>();
+                              navigationController.handleSuccessfulAuth();
                             },
                             child: const Text('Sign up', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18)),
                           ),

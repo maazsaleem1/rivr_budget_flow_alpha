@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:rivr_project/rivrBudgetFlow/view/dashboard/home_screen.dart';
-import 'package:rivr_project/rivrBudgetFlow/view/rivr_login_screen.dart';
+import 'package:get/get.dart';
 import 'dart:async';
-import 'package:rivr_project/rivrBudgetFlow/view/rivr_pre_login.dart';
+import '../../../controller/navigation_controller.dart';
 
 class RivrSplashScreen extends StatefulWidget {
   const RivrSplashScreen({super.key});
@@ -23,10 +22,11 @@ class _RivrSplashScreenState extends State<RivrSplashScreen> with SingleTickerPr
     _offsetAnimation = Tween<Offset>(
       begin: const Offset(0.0, 1.2),
       end: Offset.zero,
-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutBack));
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
     _controller.forward();
     Future.delayed(const Duration(seconds: 4), () {
-      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const RivrPreLoginScreen()));
+      final navigationController = Get.find<NavigationController>();
+      navigationController.navigateToPreLogin();
     });
   }
 
