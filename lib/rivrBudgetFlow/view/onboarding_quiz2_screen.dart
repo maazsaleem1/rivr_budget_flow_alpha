@@ -92,14 +92,20 @@ class _OnboardingQuiz2ScreenState extends State<OnboardingQuiz2Screen> {
 
   Widget _buildGoalCard(Map<String, dynamic> goal, double width) {
     final isExpanded = goal['selected'] as bool;
-    return Container(
-      width: width - 32,
-      margin: const EdgeInsets.only(bottom: 16),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(color: const Color(0xFF1F2937), borderRadius: BorderRadius.circular(16)),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          goal['selected'] = !goal['selected'];
+        });
+      },
+      child: Container(
+        width: width - 32,
+        margin: const EdgeInsets.only(bottom: 16),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(color: const Color(0xFF1F2937), borderRadius: BorderRadius.circular(16)),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -147,17 +153,10 @@ class _OnboardingQuiz2ScreenState extends State<OnboardingQuiz2Screen> {
           const Divider(color: Color(0xFF303A48), thickness: 1),
           const SizedBox(height: 8),
           if (!isExpanded)
-            GestureDetector(
-              onTap: () {
-                setState(() {
-                  goal['selected'] = !goal['selected'];
-                });
-              },
-              child: Center(
-                child: InterText(
-                  'Click to select this goal',
-                  style: const TextStyle(color: Color(0xFF9CA3AF), fontSize: 13, fontWeight: FontWeight.w400),
-                ),
+            Center(
+              child: InterText(
+                'Tap to Select',
+                style: const TextStyle(color: Color(0xFF9CA3AF), fontSize: 13, fontWeight: FontWeight.w400),
               ),
             ),
           if (isExpanded) ...[
@@ -191,6 +190,7 @@ class _OnboardingQuiz2ScreenState extends State<OnboardingQuiz2Screen> {
             ),
           ],
         ],
+      ),
       ),
     );
   }

@@ -11,7 +11,7 @@ class OnboardingQuiz1ReasonScreen extends StatefulWidget {
 }
 
 class _OnboardingQuiz1ReasonScreenState extends State<OnboardingQuiz1ReasonScreen> {
-  final List<bool> _expanded = [true, false, false, false, false, false];
+  final List<bool> _expanded = [false, false, false, false, false, false];
 
   final List<List<bool>> _checked = [
     [false, false, false, false, false, false],

@@ -170,21 +170,10 @@ class RivrPreLoginScreen extends StatefulWidget {
 class _RivrPreLoginScreenState extends State<RivrPreLoginScreen> {
   int _currentIndex = 0;
 
-  final List<Map<String, dynamic>> _carouselItems = [
-    {
-      'image': 'assets/images/preLoginLogo.png',
-      'title': 'Rivr BudgetFlow',
-  
-    },
-    {
-      'image': 'assets/images/preLoginLogo.png',
-      'title': 'Smart Planning',
-  
-    },
-    {
-      'image': 'assets/images/preLoginLogo.png',
-      'title': 'Secure & Private',
-    },
+  final List<String> _carouselTexts = [
+    'Rivr BudgetFlow',
+    'Ad-Free Budgeting',
+    '15-Day Free Trial',
   ];
 
   @override
@@ -199,29 +188,29 @@ class _RivrPreLoginScreenState extends State<RivrPreLoginScreen> {
               child: Column(
                 children: [
                   const SizedBox(height: 0),
+                  // Static logo
+                  Container(
+                    width: 220,
+                    height: 220,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                    ),
+                    child: Center(
+                      child: Image.asset('assets/images/preLoginLogo.png', width: 180, height: 180),
+                    ),
+                  ),
+                 // const SizedBox(height: 10),
+                  // Carousel for text only
                   CarouselSlider.builder(
-                    itemCount: _carouselItems.length,
+                    itemCount: _carouselTexts.length,
                     itemBuilder: (context, index, realIndex) {
-                      final item = _carouselItems[index];
-                      return Column(
-                        children: [
-                          Container(
-                            width: 220,
-                            height: 220,
-                            decoration: const BoxDecoration(
-                              shape: BoxShape.circle,
-                            ),
-                            child: Center(
-                              child: Image.asset(item['image'], width:180, height: 180),
-                            ),
-                          ),
-                          const SizedBox(height: 10),
-                          InterText(item['title'], style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 24)),
-                        ],
+                      return InterText(
+                        _carouselTexts[index], 
+                        style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 24)
                       );
                     },
                     options: CarouselOptions(
-                      height: 280,
+                      height: 40,
                       viewportFraction: 1,
                       enableInfiniteScroll: true,
                       enlargeCenterPage: false,
@@ -232,10 +221,10 @@ class _RivrPreLoginScreenState extends State<RivrPreLoginScreen> {
                       },
                     ),
                   ),
-                  const SizedBox(height: 0),
+                  const SizedBox(height: 15),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: List.generate(_carouselItems.length, (index) {
+                    children: List.generate(_carouselTexts.length, (index) {
                       return Container(
                         width: 10,
                         height: 10,

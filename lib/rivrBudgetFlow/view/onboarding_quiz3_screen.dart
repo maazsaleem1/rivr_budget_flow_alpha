@@ -42,11 +42,13 @@ class _OnboardingQuiz3ScreenState extends State<OnboardingQuiz3Screen> {
   // Add state for custom category form
   bool showCustomCategoryForm = false;
   TextEditingController customCategoryController = TextEditingController();
+  TextEditingController customBudgetController = TextEditingController();
   List<bool> customCategoryCurrencyDropdownOpen = [];
 
   @override
   void dispose() {
     customCategoryController.dispose();
+    customBudgetController.dispose();
     super.dispose();
   }
 
@@ -74,8 +76,8 @@ class _OnboardingQuiz3ScreenState extends State<OnboardingQuiz3Screen> {
             const Center(child: InterText('Step 3 of 4', style: TextStyle(color: Colors.white70, fontWeight: FontWeight.w600, fontSize: 16))),
             const SizedBox(height: 16),
             const InterText(
-              'Set Your Budget\nCategories With Purpose',
-              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),
+              'Set Your Budget Categories',
+              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
             ),
             const SizedBox(height: 10),
             const InterText(
@@ -88,8 +90,8 @@ class _OnboardingQuiz3ScreenState extends State<OnboardingQuiz3Screen> {
                 children: [
                   _buildIncomeCard(width),
                   ...categories.asMap().entries.map((entry) => _buildCategoryCard(entry.key, entry.value, width)).toList(),
-                  _buildAddCustomCategoryCard(width),
                   ...customCategories.asMap().entries.map((entry) => _buildCustomCategoryCard(entry.key, entry.value, width)).toList(),
+                  _buildAddCustomCategoryCard(width),
                   const SizedBox(height: 16),
                   _buildSummarySection(),
                   const SizedBox(height: 16),
@@ -144,7 +146,7 @@ class _OnboardingQuiz3ScreenState extends State<OnboardingQuiz3Screen> {
                 });
               },
               child: Center(
-                child: InterText('Click to select', style: const TextStyle(color: Color(0xFF9CA3AF), fontSize: 13, fontWeight: FontWeight.w400)),
+                child: InterText('Tap to select', style: const TextStyle(color: Color(0xFF9CA3AF), fontSize: 13, fontWeight: FontWeight.w400)),
               ),
             ),
           if (incomeExpanded) ...[
@@ -194,12 +196,21 @@ class _OnboardingQuiz3ScreenState extends State<OnboardingQuiz3Screen> {
     final showNeed = index == 0 || index == 1 || index == 2;
     // Determine if this category should show the 'Want' pill
     final showWant = index == 3 || index == 4;
-    return Container(
-      width: width - 32,
-      margin: const EdgeInsets.only(bottom: 16),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(color: const Color(0xFF1F2937), borderRadius: BorderRadius.circular(16)),
-      child: Column(
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          for (var c in categories) {
+            c['expanded'] = false;
+          }
+          categories[index]['expanded'] = !categories[index]['expanded'];
+        });
+      },
+      child: Container(
+        width: width - 32,
+        margin: const EdgeInsets.only(bottom: 16),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(color: const Color(0xFF1F2937), borderRadius: BorderRadius.circular(16)),
+        child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
@@ -273,18 +284,8 @@ class _OnboardingQuiz3ScreenState extends State<OnboardingQuiz3Screen> {
           const SizedBox(height: 8),
           const Divider(color: Color(0xFF303A48), thickness: 1),
           if (!isExpanded)
-            GestureDetector(
-              onTap: () {
-                setState(() {
-                  for (var c in categories) {
-                    c['expanded'] = false;
-                  }
-                  categories[index]['expanded'] = true;
-                });
-              },
-              child: Center(
-                child: InterText('Click to select', style: const TextStyle(color: Color(0xFF9CA3AF), fontSize: 13, fontWeight: FontWeight.w400)),
-              ),
+            Center(
+              child: InterText('Tap to Select', style: const TextStyle(color: Color(0xFF9CA3AF), fontSize: 13, fontWeight: FontWeight.w400)),
             ),
           if (isExpanded) ...[
             const SizedBox(height: 16),
@@ -332,6 +333,7 @@ class _OnboardingQuiz3ScreenState extends State<OnboardingQuiz3Screen> {
             ),
           ],
         ],
+      ),
       ),
     );
   }
@@ -409,6 +411,30 @@ class _OnboardingQuiz3ScreenState extends State<OnboardingQuiz3Screen> {
                       style: const TextStyle(color: Colors.white),
                       decoration: const InputDecoration(
                         border: InputBorder.none,
+                        hintText: 'E.g., Groceries, Gas, Entertainment',
+                        hintStyle: TextStyle(color: Color(0xFF9CA3AF)),
+                        contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                const InterText('Budget Amount', style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600)),
+                const SizedBox(height: 8),
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    gradient: const LinearGradient(colors: [Color(0xFF3B82F6), Color(0xFF06B6D4)]),
+                  ),
+                  padding: const EdgeInsets.all(2),
+                  child: Container(
+                    decoration: BoxDecoration(color: Colors.black, borderRadius: BorderRadius.circular(8)),
+                    child: TextField(
+                      controller: customBudgetController,
+                      style: const TextStyle(color: Colors.white),
+                      keyboardType: TextInputType.number,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
                         hintText: '500',
                         hintStyle: TextStyle(color: Color(0xFF9CA3AF)),
                         contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 14),
@@ -429,18 +455,20 @@ class _OnboardingQuiz3ScreenState extends State<OnboardingQuiz3Screen> {
                         child: TextButton(
                           onPressed: () {
                             final name = customCategoryController.text.trim();
-                            if (name.isNotEmpty) {
+                            final budget = customBudgetController.text.trim();
+                            if (name.isNotEmpty && budget.isNotEmpty) {
                               setState(() {
                                 customCategories.add({
                                   'title': name,
                                   'icon': 'assets/images/customMapIcon.png',
                                   'expanded': false,
-                                  'budget': '',
+                                  'budget': budget,
                                   'currency': 'USD',
                                 });
                                 customCategoryCurrencyDropdownOpen.add(false);
                                 showCustomCategoryForm = false;
                                 customCategoryController.clear();
+                                customBudgetController.clear();
                               });
                             }
                           },
@@ -467,6 +495,7 @@ class _OnboardingQuiz3ScreenState extends State<OnboardingQuiz3Screen> {
                             setState(() {
                               showCustomCategoryForm = false;
                               customCategoryController.clear();
+                              customBudgetController.clear();
                             });
                           },
                           style: TextButton.styleFrom(
@@ -494,12 +523,27 @@ class _OnboardingQuiz3ScreenState extends State<OnboardingQuiz3Screen> {
     final showNeed = index == 0 || index == 1 || index == 2;
     // Determine if this category should show the 'Want' pill
     final showWant = index == 3 || index == 4;
-    return Container(
-      width: width - 32,
-      margin: const EdgeInsets.only(bottom: 16),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(color: const Color(0xFF1F2937), borderRadius: BorderRadius.circular(16)),
-      child: Column(
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          // Close all regular categories
+          for (var c in categories) {
+            c['expanded'] = false;
+          }
+          // Close all custom categories
+          for (var c in customCategories) {
+            c['expanded'] = false;
+          }
+          // Open this custom category
+          customCategories[index]['expanded'] = !customCategories[index]['expanded'];
+        });
+      },
+      child: Container(
+        width: width - 32,
+        margin: const EdgeInsets.only(bottom: 16),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(color: const Color(0xFF1F2937), borderRadius: BorderRadius.circular(16)),
+        child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
@@ -573,22 +617,12 @@ class _OnboardingQuiz3ScreenState extends State<OnboardingQuiz3Screen> {
           const SizedBox(height: 8),
           const Divider(color: Color(0xFF303A48), thickness: 1),
           if (!isExpanded)
-            GestureDetector(
-              onTap: () {
-                setState(() {
-                  for (var c in categories) {
-                    c['expanded'] = false;
-                  }
-                  categories[index]['expanded'] = true;
-                });
-              },
-              child: Center(
-                child: InterText('Click to select', style: const TextStyle(color: Color(0xFF9CA3AF), fontSize: 13, fontWeight: FontWeight.w400)),
-              ),
+            Center(
+              child: InterText('Tap to Select', style: const TextStyle(color: Color(0xFF9CA3AF), fontSize: 13, fontWeight: FontWeight.w400)),
             ),
           if (isExpanded) ...[
             const SizedBox(height: 16),
-            InterText('Monthly Income', style: const TextStyle(color: Colors.white, fontSize: 14)),
+            InterText('Budget Amount', style: const TextStyle(color: Colors.white, fontSize: 14)),
             const SizedBox(height: 6),
             TextField(
               keyboardType: TextInputType.number,
@@ -606,7 +640,7 @@ class _OnboardingQuiz3ScreenState extends State<OnboardingQuiz3Screen> {
               style: const TextStyle(color: Colors.white),
               onChanged: (val) {
                 setState(() {
-                  categories[index]['budget'] = val;
+                  customCategories[index]['budget'] = val;
                 });
               },
             ),
@@ -614,24 +648,25 @@ class _OnboardingQuiz3ScreenState extends State<OnboardingQuiz3Screen> {
             InterText('Primary Currency', style: const TextStyle(color: Colors.white, fontSize: 14)),
             const SizedBox(height: 6),
             InlineCurrencyDropdown(
-              selectedCode: categoryCurrency[index],
-              expanded: categoryCurrencyDropdownOpen[index],
+              selectedCode: customCategories[index]['currency'] ?? 'USD',
+              expanded: customCategoryCurrencyDropdownOpen[index],
               onChanged: (val) {
                 setState(() {
-                  categoryCurrency[index] = val;
+                  customCategories[index]['currency'] = val;
                 });
               },
               onExpandChanged: (open) {
                 setState(() {
-                  for (int i = 0; i < categoryCurrencyDropdownOpen.length; i++) {
-                    categoryCurrencyDropdownOpen[i] = false;
+                  for (int i = 0; i < customCategoryCurrencyDropdownOpen.length; i++) {
+                    customCategoryCurrencyDropdownOpen[i] = false;
                   }
-                  categoryCurrencyDropdownOpen[index] = open;
+                  customCategoryCurrencyDropdownOpen[index] = open;
                 });
               },
             ),
           ],
         ],
+      ),
       ),
     );
   }

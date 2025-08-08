@@ -30,7 +30,19 @@ class _RivrCreateAccountScreenState extends State<RivrCreateAccountScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const SizedBox(height: 48),
+                      const SizedBox(height: 16),
+                      // Back button
+                      GestureDetector(
+                        onTap: () {
+                          final navigationController = Get.find<NavigationController>();
+                          navigationController.navigateToPreLogin();
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(6),
+                          child: SvgPicture.asset('assets/images/rivrArrowBack.svg', width: 18, height: 18),
+                        ),
+                      ),
+                      const SizedBox(height: 12),
                       Center(child: Image.asset('assets/images/rivrLoginLogo.png', width: 180, height: 80, fit: BoxFit.contain)),
                       const SizedBox(height: 18),
                       Center(
@@ -131,6 +143,50 @@ class _RivrCreateAccountScreenState extends State<RivrCreateAccountScreen> {
                           ),
                         ),
                       ),
+                      const SizedBox(height: 24),
+                      // Divider with 'or'
+                      Row(
+                        children: [
+                          const Expanded(child: Divider(color: Colors.white24, thickness: 1)),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 12),
+                            child: InterText('or', style: const TextStyle(color: Colors.white54, fontWeight: FontWeight.w600, fontSize: 16)),
+                          ),
+                          const Expanded(child: Divider(color: Colors.white24, thickness: 1)),
+                        ],
+                      ),
+                      const SizedBox(height: 24),
+                      // Google sign up button
+                      SizedBox(
+                        width: double.infinity,
+                        height: 54,
+                        child: ElevatedButton.icon(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF1F2937),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                            elevation: 0,
+                          ),
+                          icon: SvgPicture.asset('assets/images/rivrGoogleIcon.svg', width: 24, height: 24),
+                          label: const InterText('Sign up with Google', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 16)),
+                          onPressed: () {},
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      // Apple sign up button
+                      SizedBox(
+                        width: double.infinity,
+                        height: 54,
+                        child: ElevatedButton.icon(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF1F2937),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                            elevation: 0,
+                          ),
+                          icon: SvgPicture.asset('assets/images/rivrAppleIcon.svg', width: 24, height: 24),
+                          label: const InterText('Sign up with Apple', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 16)),
+                          onPressed: () {},
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -139,9 +195,12 @@ class _RivrCreateAccountScreenState extends State<RivrCreateAccountScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text('Already account? ', style: TextStyle(color: Colors.white70, fontSize: 15)),
+                  const Text('Already have an account? ', style: TextStyle(color: Colors.white70, fontSize: 15)),
                   GestureDetector(
-                    onTap: () {},
+                    onTap: () {
+                      final navigationController = Get.find<NavigationController>();
+                      navigationController.navigateToLogin();
+                    },
                     child: const Text('Sign In', style: TextStyle(color: Color(0xFF00A3FF), fontWeight: FontWeight.bold, fontSize: 15)),
                   ),
                 ],

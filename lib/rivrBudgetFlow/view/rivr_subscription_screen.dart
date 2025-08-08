@@ -12,12 +12,13 @@ class RivrSubscriptionScreen extends StatefulWidget {
 }
 
 class _RivrSubscriptionScreenState extends State<RivrSubscriptionScreen> {
-  int selectedPlan = 0; // 0: Pro, 1: Premium, 2: Ellite
+  int selectedPlan = 0; // 0: Pro, 1: Premium, 2: Elite
+  bool isPlanExpanded = false; // Toggle state for arrow rotation
 
   final List<Map<String, String>> plans = [
-    {'name': 'Pro', 'price': 'US\$14.25/Year', 'desc': 'US\$14.99/ billed annually'},
-    {'name': 'Premium', 'price': 'US\$14.25/Year', 'desc': 'US\$14.99/ billed annually'},
-    {'name': 'Ellite', 'price': 'US\$14.25/Year', 'desc': 'US\$14.99/ billed annually'},
+    {'name': 'Pro', 'price': '\$14.99/year', 'desc': '1 Free Bank Connection'},
+    {'name': 'Premium', 'price': '\$28.99/year', 'desc': '3 Free Bank Connections'},
+    {'name': 'Elite', 'price': '\$38.99/year', 'desc': '5 Free Bank Connections'},
   ];
 
   void _openPlanSelection() async {
@@ -27,10 +28,23 @@ class _RivrSubscriptionScreenState extends State<RivrSubscriptionScreen> {
       backgroundColor: Colors.transparent,
       builder: (context) => PlanSelectionBottomSheet(selectedPlan: selectedPlan),
     );
+    // Reset toggle state when bottom sheet closes
+    setState(() {
+      isPlanExpanded = false;
+    });
     if (result != null && result != selectedPlan) {
       setState(() {
         selectedPlan = result;
       });
+    }
+  }
+
+  void _togglePlanExpansion() {
+    setState(() {
+      isPlanExpanded = !isPlanExpanded;
+    });
+    if (isPlanExpanded) {
+      _openPlanSelection();
     }
   }
 
@@ -61,7 +75,7 @@ class _RivrSubscriptionScreenState extends State<RivrSubscriptionScreen> {
                     // Plan Card (Tappable)
                     InkWell(
                       borderRadius: BorderRadius.circular(8),
-                      onTap: _openPlanSelection,
+                      onTap: _togglePlanExpansion,
                       child: Stack(
                         clipBehavior: Clip.none,
                         children: [
@@ -104,7 +118,10 @@ class _RivrSubscriptionScreenState extends State<RivrSubscriptionScreen> {
                                       shape: BoxShape.circle,
                                       border: Border.all(color: const Color(0xFF00D1E9)),
                                     ),
-                                    child: const Icon(Icons.keyboard_arrow_down_rounded, color: Colors.white, size: 28),
+                                    child: Transform.rotate(
+                                      angle: isPlanExpanded ? 3.14159 : 0, // Rotate 180 degrees when expanded
+                                      child: const Icon(Icons.keyboard_arrow_down_rounded, color: Colors.white, size: 28),
+                                    ),
                                   ),
                                 ],
                               ),
@@ -307,9 +324,9 @@ class _PlanSelectionBottomSheetState extends State<PlanSelectionBottomSheet> {
   late int selectedPlan;
 
   final List<Map<String, String>> plans = [
-    {'name': 'Pro', 'price': 'US\$14.25/Year', 'desc': 'US\$14.99/ billed annually'},
-    {'name': 'Premium', 'price': 'US\$14.25/Year', 'desc': 'US\$14.99/ billed annually'},
-    {'name': 'Ellite', 'price': 'US\$14.25/Year', 'desc': 'US\$14.99/ billed annually'},
+    {'name': 'Pro', 'price': '\$14.99/year', 'desc': '1 Free Bank Connection'},
+    {'name': 'Premium', 'price': '\$28.99/year', 'desc': '3 Free Bank Connections'},
+    {'name': 'Elite', 'price': '\$38.99/year', 'desc': '5 Free Bank Connections'},
   ];
 
   @override
@@ -368,7 +385,21 @@ class _PlanSelectionBottomSheetState extends State<PlanSelectionBottomSheet> {
                                     ],
                                   ),
                                 ),
-                                Image.asset('assets/images/textGradient.png', height: 18),
+                                ShaderMask(
+                                  shaderCallback: (Rect bounds) {
+                                    return const LinearGradient(
+                                      colors: [Color(0xFF008FED), Color(0xFF00D1E9)],
+                                    ).createShader(bounds);
+                                  },
+                                  child: InterText(
+                                    plan['price']!,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ),
                               ],
                             ),
                           ),
@@ -389,7 +420,7 @@ class _PlanSelectionBottomSheetState extends State<PlanSelectionBottomSheet> {
                                 ),
                               ),
                             ),
-                          if (!isSelected)
+                          if (!isSelected && index == 0) // Only Pro plan shows "Most Popular" when not selected
                             Positioned(
                               top: -14,
                               left: 18,
